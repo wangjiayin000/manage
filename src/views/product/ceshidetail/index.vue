@@ -51,6 +51,8 @@
     </div>
 </template>
 <script>
+import * as XLSX from "xlsx/xlsx.mjs";
+import FileSaver from "file-saver";
 export default{
     data(){
         return{
