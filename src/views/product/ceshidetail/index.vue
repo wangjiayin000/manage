@@ -1,9 +1,19 @@
 <template>
     <div>
+        <el-upload
+        action
+        accept=".xlsx, .xls"
+        :auto-upload="false"
+        :show-file-list="false"
+        :on-change="handle"
+        >
+        <el-button type="primary" class="imExcelBtn"
+            >导入Excel</el-button
+        >
+        </el-upload>
+        <el-button type="success" @click="exportExcel">导出为Excel</el-button>
         <div>测试</div>
-        <el-table @selection-change="handleSelectionChange" :span-method="objectSpanMethod" :data="tableData" border  ref="multipleTable" >
-            <!-- <el-table-column :selectable="checkSelect" type="selection" width="60">
-            </el-table-column> -->
+        <el-table @selection-change="handleSelectionChange" :span-method="objectSpanMethod" :data="tableData" border id="excelTable" ref="multipleTable" >
             <el-table-column label="序号" width="60">
                 <template v-if="scope.row" slot-scope="scope">
                 <div>{{scope.row.rank}}</div>
@@ -51,6 +61,8 @@
     </div>
 </template>
 <script>
+import * as XLSX from "xlsx/xlsx.mjs";
+import FileSaver from "file-saver";
 export default{
     data(){
         return{
@@ -211,10 +223,15 @@ export default{
                 }
             ],
             spanArr:[],
-            tableData:[]
+            tableKey: false, //表格的key及显示与隐藏
+            excelName: "", //excel表格名称
+            excelHeader: [], //excel的表头
+            tableData: [], //表格数据
+            tableColumn: [], //表格的表头
         }
     },
     mounted(){
+        // console.log(this.tableList.length,'1231111111')
         this.tableData = this.tableList
         this.getSpanId(this.tableData)
     },
@@ -222,7 +239,7 @@ export default{
         handleSelectionChange(){
 
         },
-                /**
+        /**
          * 获取每行id
          * @param {*} data 
          */
@@ -249,11 +266,11 @@ export default{
             }
         },
 
-            /** 
-     * 合并行列  
-     * 当前行row、当前列column、当前行号rowIndex、当前列号columnIndex四个属性。
-     * @param {*} param0 
-     */
+        /**
+         * 合并行列  
+         * 当前行row、当前列column、当前行号rowIndex、当前列号columnIndex四个属性。
+         * @param {*} param0 
+         */
         objectSpanMethod({
             row,
             column,
@@ -274,7 +291,116 @@ export default{
                     colspan: _col
                 };
             }
-        }
+        },
+        // 上传文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+        handle(file, fileList) {
+            this.tableData = [];
+            this.spanArr=[];
+            //pos是spanArr的索引
+            this.pos = 0;
+            //改变表格key值
+            this.readExcel(file); // 调用读取数据的方法
+        },
+        // 读取数据
+        readExcel(file) {
+            let that = this;
+            if (!file) {
+                //如果没有文件
+                return false;
+            } else if (!/.(xls|xlsx)$/.test(file.name.toLowerCase())) {
+                this.$message.error("上传格式不正确，请上传xls或者xlsx格式");
+                return false;
+            }
+            const fileReader = new FileReader();
+            fileReader.onload = (ev) => {
+                try {
+                const data = ev.target.result;
+                const workbook = XLSX.read(data, {
+                    type: "binary",
+                });
+                if (workbook.SheetNames.length >= 1) {
+                    this.$message({
+                    message: "导入数据表格成功",
+                    showClose: true,
+                    type: "success",
+                    });
+                }
+                const wsname = workbook.SheetNames[0]; //取第一张表
+                const ws = XLSX.utils.sheet_to_json(workbook.Sheets[wsname]); //生成json表格内容
+                // console.log("生成json：", ws);
+                // that.tableData = [];
+                for (var i = 1; i < ws.length; i++) {
+                    let sheetData = {
+                    // 键名为绑定 el 表格的关键字，值则是 ws[i][对应表头名]
+                    rank: ws[i]["序号"],
+                    name: ws[i]["名称"],
+                    money:ws[i]["金额(元)"],
+                    coinNum:ws[i]["面值(金币)"],
+                    allNum:ws[i]["全部数量(张)"],
+                    surplusNum:ws[i]["__EMPTY"],
+                    merchantName:ws[i]["门店名称"],
+                    startTime: ws[i]["活动时间"],
+                    // city: ws[i]["__EMPTY_1"],
+                    };
+                    // console.log("上传的数据:", sheetData);
+                    //添加到表格中
+                    that.tableData.push(sheetData);
+                    //正常导入需要拿到上传的数据就在这从新弄个数组push进去，然后传给后台，后台保存后查询表格返给前端。
+                }
+                that.getExel(that.tableData)
+                this.$refs.upload.value = "";
+                // this.getSpanId(that.tableData)
+                } catch (e) {
+                console.log(e);
+                return false;
+                }
+            };
+
+            // 如果为原生 input 则应是 files[0]
+            fileReader.readAsBinaryString(file.raw);
+        },
+        //获取导入表格的数据
+        getExel(data){
+            for(let i=0;i<data.length;i++){
+                if (i === 0) {
+                //spanArr 用于存放没一行记录的合并数
+                    this.spanArr.push(1);
+                    //pos是spanArr的索引
+                    this.pos = 0;
+                } else {
+                    // 判断当前元素与上一个元素是否相同
+                    if (data[i].rank) {
+                        this.spanArr.push(1);
+                        this.pos = i;                   
+                    } else {
+                        this.spanArr[this.pos] += 1;
+                        this.spanArr.push(0);
+                    }
+                }
+                // console.log(this.spanArr);
+                // console.log(this.pos);   
+            }
+        },
+        //导出表格为Excel
+        exportExcel() {
+            /* generate workbook object from table */
+            let xlsxParam = { raw: true } // 导出的内容只做解析，不进行格式转换
+            let table = document.querySelector('#excelTable').cloneNode(true)
+            //这里是双下划线
+            // table.removeChild(table.querySelector('.el-table__fixed')) 
+            let wb = XLSX.utils.table_to_book(table, xlsxParam)
+
+            /* get binary string as output */
+            let wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+            try {
+                FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }),`${new Date()*1}.xlsx`)// 'fileName.xlsx'
+            } catch (e) {
+                if (typeof console !== 'undefined') {
+                console.log(e, wbout)
+                }
+            }
+            return wbout
+        },
 
     }
 }
