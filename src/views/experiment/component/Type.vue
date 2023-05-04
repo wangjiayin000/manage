@@ -1,0 +1,256 @@
+<template>
+    <div class="experimentlist-type">
+        <div class="spec-wrap">
+            <!-- <div class="mb16 min-spc" :key="attr.group_name" v-for="(attr, index) in form.model.spec_many.spec_attr">
+                <div class="spec-hd">
+                <div class="input-box">{{ attr.group_name }}</div>
+                <a href="javascript:void(0);" @click="onDeleteGroup(index)"><i class="el-icon-delete"></i></a>
+                </div>
+                <div class="spec-bd">
+                <div class="item" v-for="(items, i) in attr.spec_items" :key="items.spec_value">
+                    <el-tag closable @close="onDeleteValue(index, i)">{{ items.spec_value }}</el-tag>
+                </div>
+                <div class="item"><el-input size="small" v-model="attr.tempValue" style="width: 160px;"></el-input></div>
+                <div class="item"><el-button size="small" @click="onSubmitAddValue(attr)" :loading="attr.loading">添加</el-button></div>
+                </div>
+            </div> -->
+             <!-- 添加试验 -->
+            <div v-if="!form.isSpecLocked">
+                <el-button size="small" class="el-icon-circle-plus" v-show="showAddGroupBtn" @click="onToggleAddGroupForm">添加规格</el-button>
+            </div>
+            <!-- 实验列表 -->
+            <div class="add-spec mb16" v-show="!showAddGroupBtn">
+                <div class="from-box">
+                    <div class="item">
+                        <span class="key">检测项目：</span>
+                        <el-input size="small" v-model="addGroupFrom.specName" placeholder="请输入检测项目"></el-input>
+                    </div>
+                    <!-- <div class="item">
+                        <span class="key">规格值：</span>
+                        <el-input size="small" v-model="addGroupFrom.specValue" placeholder="请输入规格值"></el-input>
+                    </div> -->
+                    <el-button type="primary" size="small" :loading="groupLoading" @click="onSubmitAddGroup" plain>确定</el-button>
+                    <el-button size="small" @click="onToggleAddGroupForm">取消</el-button>
+                </div>
+            </div>
+        </div>      
+    </div>
+</template>
+<script>
+    export default{
+        data(){
+            return{
+                showAddGroupBtn:true,
+                showAddGroupForm: false,
+                  /*新增规格组值*/
+                addGroupFrom: {
+                    specName: '',
+                    specValue: ''
+                },
+                groupLoading: false,
+                form:{
+                    isSpecLocked:false
+                }
+            }
+        },
+        // inject: ['form'],
+        methods:{
+             /*显示/隐藏添加规则组 */
+            onToggleAddGroupForm(){
+                this.showAddGroupBtn = !this.showAddGroupBtn;
+                this.showAddGroupForm = !this.showAddGroupForm;
+            },
+            onSubmitAddGroup(){
+                let self = this;
+                if (self.addGroupFrom.specName === '') {
+                    self.$message('请填写实验项目');
+                    return false;
+                }
+                // 添加
+                self.groupLoading = true;
+                setTimeout(()=>{
+                    self.groupLoading = false;
+                    // 记录规格数据
+                    self.form.model.spec_many.spec_attr.push({
+                        // group_id: res.data['spec_id'],
+                        group_name: self.addGroupFrom.specName,
+                        spec_items: [
+                        {
+                            // item_id: res.data['spec_value_id'],
+                            spec_value: self.addGroupFrom.specValue
+                        }
+                        ],
+                        tempValue: '',
+                        loading: false
+                    });
+                     // 清空输入内容
+                    self.addGroupFrom.specName = '';
+                    self.addGroupFrom.specValue = '';
+                    // 隐藏添加规则组
+                    self.onToggleAddGroupForm();
+                    // 构建规格组合列表
+                    self.buildSkulist();
+                },300)
+            },
+            
+            /*构建规格组合列表*/
+            buildSkulist() {
+
+                let self = this;
+                let spec_attr = self.form.model.spec_many.spec_attr;
+                let specArr = [];
+                for (let i = 0; i < spec_attr.length; i++) {
+                specArr.push(spec_attr[i].spec_items);
+                }
+
+                let specListTemp = self.calcDescartes(specArr);
+
+                let specList = [];
+                for (let i = 0; i < specListTemp.length; i++) {
+                let rows = [];
+                let specSkuIdAttr = [];
+                if (!Array.isArray(specListTemp[i])) {
+                    rows.push(specListTemp[i]);
+                } else {
+                    rows = specListTemp[i];
+                }
+                for (let j = 0; j < rows.length; j++) {
+                    specSkuIdAttr.push(rows[j].item_id);
+                }
+                specList.push({
+                    product_sku_id: 0,
+                    spec_sku_id: specSkuIdAttr.join('_'),
+                    rows: rows,
+                    spec_form: {}
+                });
+                }
+
+                // 合并旧sku数据
+                if (self.form.model.spec_many.spec_list.length > 0 && specList.length > 0) {
+                for (let i = 0; i < specList.length; i++) {
+                    let overlap = self.form.model.spec_many.spec_list.filter(function(val) {
+                    return val.spec_sku_id === specList[i].spec_sku_id;
+                    });
+                    if (overlap.length > 0) {
+                    specList[i].spec_form = overlap[0].spec_form;
+                    specList[i].product_sku_id=overlap[0].product_sku_id;
+                    }
+                }
+                }
+
+                self.form.model.spec_many.spec_list = specList;
+            },
+            /*删除规格组事件*/
+            onDeleteGroup(index) {
+            var self = this;
+            self.$confirm('删除后不可恢复，确认删除该记录吗?', '提示', {
+                type: 'warning'
+                })
+                .then(() => {
+                // 删除指定规则组
+                self.form.model.spec_many.spec_attr.splice(index, 1);
+                // 构建规格组合列表
+                self.buildSkulist();
+                });
+            },
+            /*删除规格值值事件*/
+            onDeleteValue(index, itemIndex) {
+            let self = this;
+
+            if(self.form.isSpecLocked){
+                self.$message({
+                message: '本商品正在搞活动，不能删除规格！',
+                type: 'warning'
+                });
+                return;
+            }
+
+            self.$confirm('删除后不可恢复，确认删除该记录吗?', '提示', {
+                type: 'warning'
+                })
+                .then(() => {
+                // 删除指定规则组
+                self.form.model.spec_many.spec_attr[index].spec_items.splice(itemIndex, 1);
+                // 构建规格组合列表
+                self.buildSkulist();
+                });
+            }
+
+
+        }
+    }
+</script>
+<style lang="scss" scoped>
+.experimentlist-type{
+    margin-left: 180px;
+    margin-top: 16px;
+    padding: 20px;
+    border: 1px solid #e5ecf4;
+    background: #f6f9fc;
+}
+.spec-wrap .spec-hd {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  font-weight: bold;
+}
+.spec-wrap .spec-hd .el-icon-delete-solid {
+  font-size: 16px;
+  color: #999999;
+}
+.spec-wrap .min-spc {
+  border: 1px solid #dfecf8;
+}
+.spec-wrap .spec-bd {
+  padding: 5px;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  border-top: 1px solid #dfecf8;
+  background: #ffffff;
+}
+.spec-wrap .spec-bd .el-tag {
+  color: #333333;
+}
+.spec-wrap .spec-bd .item {
+  position: relative;
+  padding: 5px;
+}
+.spec-wrap .spec-bd .item input {
+  padding-right: 30px;
+}
+.spec-wrap .spec-hd a,
+.spec-wrap .spec-hd .svg-icon,
+.spec-wrap .spec-bd .item .svg-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+.spec-wrap .spec-bd .item a {
+  position: absolute;
+  top: 6px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.add-spec .from-box {
+  display: flex;
+  justify-content: flex-start;
+}
+.add-spec .item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 200px;
+  margin-right: 20px;
+}
+.add-spec .item .key {
+  display: block;
+  white-space: nowrap;
+}
+</style>
