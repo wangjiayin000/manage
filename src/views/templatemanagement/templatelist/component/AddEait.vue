@@ -22,7 +22,7 @@
             <el-upload class="avatar-uploader" ref="upload" action="string"
             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             :before-upload="onBeforeUploadImage" :http-request="UploadImage" :show-file-list="false">
-            <el-button size="small" icon="el-icon-upload" type="primary">上传发货表格</el-button>
+            <el-button size="small" icon="el-icon-upload" type="primary">上传模板</el-button>
             </el-upload>
           </div>
       </el-form-item>

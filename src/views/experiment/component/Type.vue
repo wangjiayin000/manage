@@ -1,19 +1,19 @@
 <template>
     <div class="experimentlist-type">
         <div class="spec-wrap">
-            <!-- <div class="mb16 min-spc" :key="attr.group_name" v-for="(attr, index) in form.model.spec_many.spec_attr">
+            <div class="mb16 min-spc" :key="attr.group_name" v-for="(attr, index) in form.model.spec_many.spec_attr">
                 <div class="spec-hd">
                 <div class="input-box">{{ attr.group_name }}</div>
                 <a href="javascript:void(0);" @click="onDeleteGroup(index)"><i class="el-icon-delete"></i></a>
                 </div>
                 <div class="spec-bd">
-                <div class="item" v-for="(items, i) in attr.spec_items" :key="items.spec_value">
+                <div class="item" v-for="(items, i) in attr.spec_items" :key="i">
                     <el-tag closable @close="onDeleteValue(index, i)">{{ items.spec_value }}</el-tag>
                 </div>
                 <div class="item"><el-input size="small" v-model="attr.tempValue" style="width: 160px;"></el-input></div>
                 <div class="item"><el-button size="small" @click="onSubmitAddValue(attr)" :loading="attr.loading">添加</el-button></div>
                 </div>
-            </div> -->
+            </div>
              <!-- 添加试验 -->
             <div v-if="!form.isSpecLocked">
                 <el-button size="small" class="el-icon-circle-plus" v-show="showAddGroupBtn" @click="onToggleAddGroupForm">添加规格</el-button>
@@ -37,7 +37,8 @@
     </div>
 </template>
 <script>
-    export default{
+  export default{
+      inject:['form'],
         data(){
             return{
                 showAddGroupBtn:true,
@@ -47,13 +48,9 @@
                     specName: '',
                     specValue: ''
                 },
-                groupLoading: false,
-                form:{
-                    isSpecLocked:false
-                }
+                groupLoading: false
             }
         },
-        // inject: ['form'],
         methods:{
              /*显示/隐藏添加规则组 */
             onToggleAddGroupForm(){
@@ -68,18 +65,11 @@
                 }
                 // 添加
                 self.groupLoading = true;
-                setTimeout(()=>{
                     self.groupLoading = false;
                     // 记录规格数据
                     self.form.model.spec_many.spec_attr.push({
-                        // group_id: res.data['spec_id'],
                         group_name: self.addGroupFrom.specName,
-                        spec_items: [
-                        {
-                            // item_id: res.data['spec_value_id'],
-                            spec_value: self.addGroupFrom.specValue
-                        }
-                        ],
+                        spec_items: [],
                         tempValue: '',
                         loading: false
                     });
@@ -89,56 +79,66 @@
                     // 隐藏添加规则组
                     self.onToggleAddGroupForm();
                     // 构建规格组合列表
-                    self.buildSkulist();
-                },300)
+                    // self.buildSkulist();
             },
-            
+            /*新增规格值*/
+            onSubmitAddValue: function(specAttr) {
+              let self = this;
+              if (!specAttr.hasOwnProperty('tempValue') || specAttr.tempValue === '') {
+                self.$message('规格值不能为空');
+                return false;
+              }
+              // 添加到数据库
+              specAttr.loading = true;
+              let Params = {
+                spec_id: specAttr.group_id,
+                spec_value: specAttr.tempValue
+              };
+              specAttr.loading = false;
+              // 记录规格数据
+              specAttr.spec_items.push({
+                item_id: specAttr.group_id,
+                items:'',
+                itemm:'',
+                type:0,
+                typeList:[],
+                spec_value: specAttr.tempValue
+              });
+              // 清空输入内容
+              specAttr.tempValue = '';
+              // 构建规格组合列表
+              self.buildSkulist();
+             
+            },
             /*构建规格组合列表*/
             buildSkulist() {
-
-                let self = this;
-                let spec_attr = self.form.model.spec_many.spec_attr;
-                let specArr = [];
-                for (let i = 0; i < spec_attr.length; i++) {
-                specArr.push(spec_attr[i].spec_items);
+              let self = this;
+              let spec_attr = self.form.model.spec_many.spec_attr;
+              let specArr = [];
+              spec_attr.forEach((item,index)=>{
+                item.spec_items.forEach((val,i)=>{
+                    specArr.push({
+                        group_name:item.group_name,
+                        ...val
+                     })
+                 })
+              })
+              // 合并旧数据
+              if (self.form.model.spec_many.spec_list.length > 0 && specArr.length > 0) {
+                for (let i = 0; i < specArr.length; i++) {
+                  let overlap = self.form.model.spec_many.spec_list.filter(function(val) {
+                    return val.spec_value == specArr[i].spec_value;
+                  });
+                  if (overlap.length > 0) {
+                    specArr[i].items = overlap[0].items;
+                    specArr[i].itemm = overlap[0].itemm;
+                    specArr[i].type = overlap[0].type;
+                    specArr[i].typeList = overlap[0].typeList;
+                  }
                 }
-
-                let specListTemp = self.calcDescartes(specArr);
-
-                let specList = [];
-                for (let i = 0; i < specListTemp.length; i++) {
-                let rows = [];
-                let specSkuIdAttr = [];
-                if (!Array.isArray(specListTemp[i])) {
-                    rows.push(specListTemp[i]);
-                } else {
-                    rows = specListTemp[i];
-                }
-                for (let j = 0; j < rows.length; j++) {
-                    specSkuIdAttr.push(rows[j].item_id);
-                }
-                specList.push({
-                    product_sku_id: 0,
-                    spec_sku_id: specSkuIdAttr.join('_'),
-                    rows: rows,
-                    spec_form: {}
-                });
-                }
-
-                // 合并旧sku数据
-                if (self.form.model.spec_many.spec_list.length > 0 && specList.length > 0) {
-                for (let i = 0; i < specList.length; i++) {
-                    let overlap = self.form.model.spec_many.spec_list.filter(function(val) {
-                    return val.spec_sku_id === specList[i].spec_sku_id;
-                    });
-                    if (overlap.length > 0) {
-                    specList[i].spec_form = overlap[0].spec_form;
-                    specList[i].product_sku_id=overlap[0].product_sku_id;
-                    }
-                }
-                }
-
-                self.form.model.spec_many.spec_list = specList;
+              }
+              self.form.model.spec_many.spec_list = specArr;
+              // console.log(self.form.model.spec_many.spec_list,'数据')
             },
             /*删除规格组事件*/
             onDeleteGroup(index) {

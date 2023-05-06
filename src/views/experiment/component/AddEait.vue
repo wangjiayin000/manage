@@ -7,16 +7,8 @@
   <el-dialog title="添加类型" :visible.sync="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false" width="600px">
     <el-form size="small" :model="form" ref="form">
-      <el-form-item label="类型名称" :label-width="formLabelWidth" prop="name" :rules="[{required: true,message: '请选择类型',trigger: ['blur', 'change']}]">
-        <el-select v-model="form.name" placeholder="请选择类型">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <!-- <el-input v-model="form.tag_name" placeholder="请输入标签名称"></el-input> -->
+      <el-form-item label="类型名称" :label-width="formLabelWidth" prop="name" :rules="[{required: true,message: '请输入类型名称',trigger: ['blur', 'change']}]">
+        <el-input v-model="form.name" placeholder="请输入标签名称"></el-input>
       </el-form-item>
     </el-form>
 
@@ -44,13 +36,13 @@
         submit_loading: false,
         /*类型*/
         options: [{
-          value: '1',
+          value: '例行',
           label: '例行'
         }, {
-          value: '2',
+          value: '型式',
           label: '型式'
         }, {
-          value: '3',
+          value: '特殊',
           label: '特殊'
         }],
       };
@@ -83,7 +75,7 @@
         self.$refs.form.validate((valid) => {
           if (valid) {
             self.submit_loading = true;
-            if(type==0){
+            if(this.type==0){
               CategoryApi.addCategory(params, true).then(data => {
                 self.submit_loading = false;
                 self.$message({
@@ -116,6 +108,7 @@
       },
       /*关闭弹窗*/
       dialogFormVisible(e) {
+        this.form.name = ''
         if (e) {
           this.$emit('closeDialog', {
             type: 'success',

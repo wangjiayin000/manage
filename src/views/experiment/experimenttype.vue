@@ -8,7 +8,7 @@
       <div class="product-content">
         <div class="table-wrap">
           <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-            <el-table-column prop="tag_name" label="类型名称" width="300"></el-table-column>
+            <el-table-column prop="name" label="类型名称" width="300"></el-table-column>
             <!-- <el-table-column prop="user_count" label="人数"></el-table-column> -->
             <el-table-column prop="create_time" label="创建时间"></el-table-column>
             <el-table-column fixed="right" label="操作" width="90">
@@ -109,15 +109,15 @@
   
         /*打开添加*/
         addClick() {
-          this.open_add = true;
           this.open_type = 0;
+          this.open_add = true;
         },
   
         /*打开编辑*/
         editClick(item) {
-          this.userModel = deepClone(item);
-          this.open_type = 1;
-          this.open_edit = true;
+          this.userModel = deepClone(item);       
+          this.open_type = 1;  
+          this.open_add = true;
         },
   
         /*关闭弹窗*/
@@ -145,8 +145,8 @@
             type: 'warning'
           }).then(() => {
             self.loading = true;
-            CategoryApi.deleteTag({
-                tag_id: row.tag_id
+            CategoryApi.deleteCategory({
+                id: row.id
               }, true)
               .then(data => {
                 self.loading = false;
