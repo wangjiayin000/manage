@@ -99,7 +99,6 @@
               specAttr.spec_items.push({
                 item_id: specAttr.group_id,
                 items:'',
-                itemm:'',
                 type:0,
                 typeList:[],
                 spec_value: specAttr.tempValue
@@ -131,7 +130,6 @@
                   });
                   if (overlap.length > 0) {
                     specArr[i].items = overlap[0].items;
-                    specArr[i].itemm = overlap[0].itemm;
                     specArr[i].type = overlap[0].type;
                     specArr[i].typeList = overlap[0].typeList;
                   }

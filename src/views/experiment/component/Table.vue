@@ -23,45 +23,36 @@
                 </el-table-column>
                 <el-table-column label="标准要求" align="center">
                     <template v-if="scope.row" slot-scope="scope">
-                      <div>
-                        <span>{{scope.row.spec_value}}</span>
-                        <el-switch
-                          v-model="scope.row.type"
-                          active-text="数据"
-                          inactive-text="文字">
-                        </el-switch>
+                        <span>{{scope.row.spec_value}}</span> 
+                    </template>
+                </el-table-column>
+                <el-table-column label="类型" align="center">
+                    <template v-if="scope.row" slot-scope="scope">
+                      <el-switch
+                        v-model="scope.row.type"
+                        active-text="数据"
+                        inactive-text="文字">
+                      </el-switch>
+                    </template>
+                </el-table-column>
+                <el-table-column label="数据" align="center">
+                    <template v-if="scope.row" slot-scope="scope">
                         <div v-show="scope.row.type">
                           <span v-show="scope.row.typeList.length>0">
                               <span v-for="(item,index) in scope.row.typeList" :key="index">{{item}}</span>
                           </span>
                           <el-button type="text" @click="addType(scope.row,scope.$index)">选择</el-button>
-                        </div>
-                      </div>
-                        
+                        </div>        
                     </template>
                 </el-table-column>
-                <el-table-column label="检测结果" align="center">
-                    <el-table-column label="短路试验前"  align="center">
-                        <template v-if="scope.row" slot-scope="scope">
-                          <el-select size="small" v-model="scope.row.items" placeholder="符号">
-                              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label"></el-option>
-                          </el-select>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="短路试验后"  align="center">
-                        <template v-if="scope.row" slot-scope="scope">
-                          <el-select size="small" v-model="scope.row.itemm" placeholder="符号">
-                              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label"></el-option>
-                          </el-select>
-                        </template>
-                    </el-table-column>
+                <el-table-column label="单位" align="center">
+                  <template v-if="scope.row" slot-scope="scope">
+                    <el-select size="small" v-model="scope.row.items" placeholder="符号">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label"></el-option>
+                    </el-select>
+                  </template>
                 </el-table-column>
                 
-                <el-table-column label="结论"  align="center">
-                    <template v-if="scope.row" slot-scope="scope">
-                      <span>符合/不符合</span>
-                    </template>
-                </el-table-column>
               </el-table>
             </div>
           </el-form-item>
@@ -212,7 +203,7 @@
         },
         /*表格跨行*/
         objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-          if (columnIndex === 0 || columnIndex === 1 || columnIndex === 5) {            
+          if (columnIndex === 0 || columnIndex === 1) {            
               const _row = this.spanArr[rowIndex];
               //如果行号大于0 合并
               const _col = _row > 0 ? 1 : 0;
