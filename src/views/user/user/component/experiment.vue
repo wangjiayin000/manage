@@ -1,37 +1,31 @@
 <template>
-    <div class="experimentList">
+        <!--
+        作者 wjy
+        时间：2020-05-06
+        描述：会员-机构数据-试验
+    -->
+    <div class="experiment">
          <!--搜索表单-->
         <div class="common-seach-wrap">
         <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
-            <el-form-item label="商品分类">
-            <el-select size="small" v-model="searchForm.category_id" placeholder="所有分类">
-                <el-option label="全部" value="0"></el-option>
-                <el-option v-for="(item, index) in categoryList" :key="index" :label="item.name" :value="item.category_id"></el-option>
-            </el-select>
+            <el-form-item label="关键词">
+                <el-input v-model="searchForm.product_name" placeholder="请输入样品编号"></el-input>
             </el-form-item>
-            <el-form-item label="商品名称"><el-input size="small" v-model="searchForm.product_name" placeholder="请输入商品名称"></el-input></el-form-item>
             <el-form-item>
-            <el-button size="small" type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
+                <el-button size="small" type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
             </el-form-item>
         </el-form>
-        </div>
-        <div class="common-level-rail">
-            <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick" v-auth="'/product/product/add'">添加试验</el-button>
         </div>
             <!--内容-->
        <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                <el-table-column prop="category.name" label="分类"></el-table-column>
-                <el-table-column prop="create_time" label="发布时间"></el-table-column>
-                <el-table-column fixed="right" label="操作" width="80">
-                    <template slot-scope="scope">
-                    <div class="table-btn-column">
-                        <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/product/product/edit'">编辑试验</el-button>
-                        <el-button @click="delClick(scope.row)" type="text" size="small" v-auth="'/product/product/delete'">删除试验</el-button>
-                    </div>
-                    </template>
-                </el-table-column>
+                    <el-table-column prop="category.name" label="样品编号"></el-table-column>
+                    <el-table-column prop="category.name" label="样品型号"></el-table-column>
+                    <el-table-column prop="category.name" label="试验员"></el-table-column>
+                    <el-table-column prop="category.name" label="试验名称"></el-table-column>
+                    <el-table-column prop="category.name" label="试验进度"></el-table-column>
+                    <el-table-column prop="category.name" label="样品报告"></el-table-column>
                 </el-table>
             </div>
         </div>
@@ -64,7 +58,6 @@
                 curPage: 1,
                 /*搜索参数*/
                 searchForm:{
-                    category_id:'',
                     product_name:''
                 },
                  /*列表数据*/
@@ -105,37 +98,6 @@
                 this.curPage = 1;
                 this.getData();
             },
-            addClick(){
-                this.$router.push('/experiment/add');
-            },
-            editClick(){
-                this.$router.push({
-                    path: '/experiment/add',
-                    query: {
-                    product_id: row.product_id,
-                    scene: 'edit'
-                    }
-                });
-            },
-             /*删除*/
-            delClick: function(row) {
-            let self = this;
-            let msg = '删除后不可恢复，确认删除该记录吗?';
-            self.$confirm(msg, '提示', {
-                type: 'warning'
-                })
-                .then(() => {
-                    // PorductApi.delProduct({
-                    //     product_id: row.product_id
-                    // }).then(data => {
-                    //     self.$message({
-                    //     message: '删除成功',
-                    //     type: 'success'
-                    //     });
-                    //     self.getData();
-                    // });
-                });
-            },
             /*选择第几页*/
             handleCurrentChange(val) {
                 let self = this;
@@ -154,7 +116,7 @@
     }
 </script>
 <style lang="scss" scoped>
-.experimentList{
+.experiment{
 
 }
 </style>

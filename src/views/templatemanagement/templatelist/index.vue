@@ -8,7 +8,7 @@
   
       <!--添加商户-->
       <div class="common-level-rail fl">
-        <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick" v-auth="'/supplier/supplier/add'">添加商户</el-button>
+        <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick">添加模板</el-button>
       </div>
       <div class="common-seach-wrap fr">
         <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
@@ -25,38 +25,19 @@
       <div class="product-content">
         <div class="table-wrap">
           <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-            <el-table-column prop="shop_supplier_id" label="商户ID" width="90"></el-table-column>
-            <el-table-column prop="name" label="商户名称"></el-table-column>
-            <el-table-column prop="superUser.user_name" label="登录账号"></el-table-column>
-            <el-table-column label="logo" width="80">
+            <!-- <el-table-column prop="shop_supplier_id" label="商户ID" width="90"></el-table-column> -->
+            <el-table-column prop="name" label="样品名称"></el-table-column>
+            <el-table-column label="模板文件">
               <template slot-scope="scope">
-                <el-image v-if="scope.row.logo" :src="scope.row.logo.file_path"
-                  width="50" height="50" :preview-src-list="getLogoList(scope.$index)"/>
+                {{scope.row.superUser.user_name}}
               </template>
             </el-table-column>
-            <el-table-column label="营业执照" width="80">
-              <template slot-scope="scope">
-                <el-image v-if="scope.row.business" :src="scope.row.business.file_path"
-                  width="50" height="50" :preview-src-list="getBusinessList(scope.$index)"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="保证金" width="80">
-              <template slot-scope="scope">
-                <span v-if="scope.row.status == 0" class="green">已缴纳</span>
-                <span v-if="scope.row.status == 10">申请退出</span>
-                <span v-if="scope.row.status == 20" class="gray">未缴纳</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="link_name" label="联系人" width="90"></el-table-column>
-            <el-table-column prop="link_phone" label="联系电话" width="120"></el-table-column>
-            <el-table-column prop="address" label="联系地址"></el-table-column>
-            <el-table-column prop="create_time" label="添加时间" width="150"></el-table-column>
+            <el-table-column prop="address" label="模板历史"></el-table-column>
+            <el-table-column prop="create_time" label="上传时间"></el-table-column>
             <el-table-column fixed="right" label="操作" width="150">
               <template slot-scope="scope">
-                <el-button @click="recycle(scope.row,0)" type="text" size="small" v-auth="'/supplier/supplier/edit'" v-if="scope.row.is_recycle==1" style="color:gray;">开启</el-button>
-                <el-button @click="recycle(scope.row,1)" type="text" size="small" v-auth="'/supplier/supplier/edit'" v-else>禁用</el-button>
-                <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/supplier/supplier/edit'">编辑</el-button>
-                <el-button @click="deleteClick(scope.row.shop_supplier_id)" type="text" size="small" v-auth="'/supplier/supplier/delete'">删除</el-button>
+                <el-button @click="editClick(scope.row)" type="text" size="small">编辑</el-button>
+                <el-button @click="deleteClick(scope.row.shop_supplier_id)" type="text" size="small">删除</el-button>
               </template>
             </el-table-column>
           </el-table>

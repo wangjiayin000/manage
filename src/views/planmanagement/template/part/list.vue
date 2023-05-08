@@ -7,7 +7,7 @@
   <div class="user">
     <!--添加等级-->
     <div class="common-level-rail">
-      <el-button size="small" type="primary" @click="addClick" icon="el-icon-plus" v-auth="'/user/grade/add'">添加等级</el-button>
+      <el-button size="small" type="primary" @click="addClick" icon="el-icon-plus" v-auth="'/user/grade/add'">添加模板</el-button>
     </div>
 
     <!--内容-->

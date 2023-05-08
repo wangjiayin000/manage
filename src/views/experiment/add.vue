@@ -39,7 +39,8 @@ export default{
                 /*form表单数据*/
                 form: {
                     model: {
-                        name:'',        
+                        name:'',
+                        typeName:'',        
                         spec_many: {
                             /*多规格类别*/
                             spec_attr: [],
@@ -59,17 +60,18 @@ export default{
                 let params = self.form.model;
                 self.$refs.form.validate(valid => {
                 if (valid) {
-                    if(params.is_delivery_free == 0){
-                        params.delivery_id = 0;
-                    }else{
-                        if(params.delivery_id == ''){
-                            self.$message({
-                            message: '请选择运费模板',
-                            type: 'error'
-                            });
-                            return;
-                        }
-                    }
+                    console.log(self.form.model,'表')
+                    // if(params.is_delivery_free == 0){
+                    //     params.delivery_id = 0;
+                    // }else{
+                    //     if(params.delivery_id == ''){
+                    //         self.$message({
+                    //         message: '请选择运费模板',
+                    //         type: 'error'
+                    //         });
+                    //         return;
+                    //     }
+                    // }
                     // self.loading = true;
                     // PorductApi.addProduct({
                     //     params: JSON.stringify(params)
