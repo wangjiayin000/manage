@@ -3,14 +3,14 @@
         <div class="spec-wrap">
             <div class="mb16 min-spc" :key="attr.group_name" v-for="(attr, index) in form.model.spec_many.spec_attr">
                 <div class="spec-hd">
-                <div class="input-box">{{ attr.group_name }}</div>
+                <div class="input-box">{{ attr.item_name }}</div>
                 <a href="javascript:void(0);" @click="onDeleteGroup(index)"><i class="el-icon-delete"></i></a>
                 </div>
                 <div class="spec-bd">
                 <div class="item" v-for="(items, i) in attr.spec_items" :key="i">
-                    <el-tag closable @close="onDeleteValue(index, i)">{{ items.spec_value }}</el-tag>
+                    <el-tag closable @close="onDeleteValue(index, i)">{{ items.item_subclass }}</el-tag>
                 </div>
-                <div class="item"><el-input size="small" v-model="attr.tempValue" style="width: 160px;"></el-input></div>
+                <div class="item"><el-input size="small" v-model="attr.item_subclass" style="width: 160px;"></el-input></div>
                 <div class="item"><el-button size="small" @click="onSubmitAddValue(attr)" :loading="attr.loading">添加</el-button></div>
                 </div>
             </div>
@@ -37,6 +37,7 @@
     </div>
 </template>
 <script>
+  import ExperimentApi from '@/api/Experiment.js';
   export default{
       inject:['form'],
         data(){
@@ -65,49 +66,65 @@
                 }
                 // 添加
                 self.groupLoading = true;
-                    self.groupLoading = false;
-                    // 记录规格数据
-                    self.form.model.spec_many.spec_attr.push({
-                        group_name: self.addGroupFrom.specName,
-                        spec_items: [],
-                        tempValue: '',
-                        loading: false
-                    });
-                     // 清空输入内容
-                    self.addGroupFrom.specName = '';
-                    self.addGroupFrom.specValue = '';
-                    // 隐藏添加规则组
-                    self.onToggleAddGroupForm();
-                    // 构建规格组合列表
-                    // self.buildSkulist();
+                let Params = {
+                  item_name: self.addGroupFrom.specName,
+                  item_subclass: ''
+                };
+                ExperimentApi.experimentAddItem(Params, true)
+                .then(res => {
+                  self.groupLoading = false;
+                  // 记录规格数据
+                  self.form.model.spec_many.spec_attr.push({
+                    item_id: res.data['item_id'],
+                    item_name: self.addGroupFrom.specName,
+                    spec_items: [],
+                    tempValue: '',
+                    loading: false
+                  });
+                  // 清空输入内容
+                  self.addGroupFrom.specName = '';
+                  self.addGroupFrom.specValue = '';
+                  // 隐藏添加规则组
+                  self.onToggleAddGroupForm();
+                  // 构建规格组合列表
+                  self.buildSkulist();
+                })
+                .catch(error => {
+                  self.groupLoading = false;
+                });
             },
             /*新增规格值*/
             onSubmitAddValue: function(specAttr) {
               let self = this;
-              if (!specAttr.hasOwnProperty('tempValue') || specAttr.tempValue === '') {
+              if (!specAttr.hasOwnProperty('item_subclass') || specAttr.item_subclass === '') {
                 self.$message('规格值不能为空');
                 return false;
               }
               // 添加到数据库
               specAttr.loading = true;
               let Params = {
-                spec_id: specAttr.group_id,
-                spec_value: specAttr.tempValue
+                item_id: specAttr.item_id,
+                item_subclass: specAttr.item_subclass
               };
-              specAttr.loading = false;
-              // 记录规格数据
-              specAttr.spec_items.push({
-                item_id: specAttr.group_id,
-                items:'',
-                type:0,
-                typeList:[],
-                spec_value: specAttr.tempValue
+              ExperimentApi.experimentSubclass(Params, true)
+              .then(data => {
+                specAttr.loading = false;
+                // 记录规格数据
+                specAttr.spec_items.push({
+                  item_subclass_id: data.data['item_subclass_id'],
+                  items:'',
+                  type:0,
+                  typeList:[],
+                  item_subclass: specAttr.item_subclass
+                });
+                // 清空输入内容
+                specAttr.item_subclass = '';
+                // 构建规格组合列表
+                self.buildSkulist();
+              })
+              .catch(error => {
+                specAttr.loading = false;
               });
-              // 清空输入内容
-              specAttr.tempValue = '';
-              // 构建规格组合列表
-              self.buildSkulist();
-             
             },
             /*构建规格组合列表*/
             buildSkulist() {
@@ -117,7 +134,8 @@
               spec_attr.forEach((item,index)=>{
                 item.spec_items.forEach((val,i)=>{
                     specArr.push({
-                        group_name:item.group_name,
+                      item_id: item.item_id,
+                      item_name:item.item_name,
                         ...val
                      })
                  })
@@ -126,7 +144,7 @@
               if (self.form.model.spec_many.spec_list.length > 0 && specArr.length > 0) {
                 for (let i = 0; i < specArr.length; i++) {
                   let overlap = self.form.model.spec_many.spec_list.filter(function(val) {
-                    return val.spec_value == specArr[i].spec_value;
+                    return val.item_subclass_id == specArr[i].item_subclass_id;
                   });
                   if (overlap.length > 0) {
                     specArr[i].items = overlap[0].items;

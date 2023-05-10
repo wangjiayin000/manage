@@ -18,7 +18,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="来源">
+        <el-form-item label="来源">
           <el-select v-model="formInline.reg_source" placeholder="请选择">
             <el-option label="全部" value=""></el-option>
             <el-option label="小程序" value="wx"></el-option>
@@ -32,15 +32,15 @@
             <el-date-picker v-model="formInline.reg_date" type="daterange" value-format="yyyy-MM-dd" range-separator="至"
               start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
           </div>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
         </el-form-item>
       </el-form>
       <div class="mb16">
-        <el-button size="small" type="primary" @click="addEditClick" icon="el-icon-plus">添加机构</el-button>
-        <el-button size="small" type="primary" @click="addPuthClick" icon="el-icon-plus">机构数据</el-button>
-        <!-- <span>标签</span>
+        <!-- <el-button size="small" type="primary" @click="addEditClick" icon="el-icon-plus">添加机构</el-button> -->
+        <!-- <el-button size="small" type="primary" @click="addPuthClick" icon="el-icon-plus">机构数据</el-button> -->
+        <span>标签</span>
         <span class="pl10">
           <el-radio-group v-model="formInline.tag_id" size="mini" @change="onSubmit">
             <el-radio-button label="0">全部</el-radio-button>
@@ -48,7 +48,7 @@
               {{item.tag_name}}
             </el-radio-button>
           </el-radio-group>
-        </span> -->
+        </span>
       </div>
     </div>
     <!--内容-->
@@ -57,7 +57,7 @@
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
           <el-table-column prop="user_id" label="机构编号" width="80"></el-table-column>
           <el-table-column prop="nickName" label="机构名称"></el-table-column>
-          <!-- <el-table-column prop="nickName" label="微信头像">
+          <el-table-column prop="nickName" label="微信头像">
             <template slot-scope="scope">
               <img :src="scope.row.avatarUrl" width="30px" height="30px" />
             </template>
@@ -74,21 +74,21 @@
               <span v-if="scope.row.reg_source == 'app'">APP</span>
               <span v-if="scope.row.reg_source == 'h5'">H5</span>
             </template>
-          </el-table-column> -->
+          </el-table-column>
           <el-table-column prop="points" label="会员有效期"></el-table-column>
           <el-table-column prop="balance" label="会员充值记录"></el-table-column>
           <el-table-column prop="mobile" label="机构员工数"></el-table-column>
-          <!-- <el-table-column prop="create_time" label="注册时间" width="140"></el-table-column> -->
+          <el-table-column prop="create_time" label="注册时间" width="140"></el-table-column>
           <el-table-column fixed="right" label="操作" width="170">
             <template slot-scope="scope">
-              <!-- <el-button @click="addClick(scope.row)" type="text" size="small" v-auth="'/user/user/recharge'">充值
-              </el-button> -->
+              <el-button @click="addClick(scope.row)" type="text" size="small" v-auth="'/user/user/recharge'">充值
+              </el-button>
               <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/user/user/edit'">编辑
               </el-button>
-              <!-- <el-button @click="gradeClick(scope.row)" type="text" size="small" v-auth="'/user/user/grade'">等级
+              <el-button @click="gradeClick(scope.row)" type="text" size="small" v-auth="'/user/user/grade'">等级
               </el-button>
               <el-button @click="tagClick(scope.row)" type="text" size="small" v-auth="'/user/user/delete'">标签
-              </el-button> -->
+              </el-button>
               <el-button @click="deleteClick(scope.row)" type="text" size="small" v-auth="'/user/user/delete'">删除
               </el-button>
             </template>

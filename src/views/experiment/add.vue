@@ -21,6 +21,7 @@
 <script>
 import Basic from './component/Basic';
 import Many from './component/Many';
+import ExperimentApi from '@/api/Experiment.js';
 export default{
         components:{
             Basic,
@@ -40,7 +41,7 @@ export default{
                 form: {
                     model: {
                         name:'',
-                        typeName:'',        
+                        category_id:'',        
                         spec_many: {
                             /*多规格类别*/
                             spec_attr: [],
@@ -57,36 +58,41 @@ export default{
             /*提交*/
             onSubmit: function() {
                 let self = this;
-                let params = self.form.model;
+                let params = {
+                    name:self.form.model.name,
+                    category_id:self.form.model.category_id,
+                    spec_list:self.form.model.spec_many.spec_list
+                }
+
                 self.$refs.form.validate(valid => {
                 if (valid) {
-                    console.log(self.form.model,'表')
-                    // if(params.is_delivery_free == 0){
-                    //     params.delivery_id = 0;
-                    // }else{
-                    //     if(params.delivery_id == ''){
-                    //         self.$message({
-                    //         message: '请选择运费模板',
-                    //         type: 'error'
-                    //         });
-                    //         return;
-                    //     }
-                    // }
-                    // self.loading = true;
-                    // PorductApi.addProduct({
-                    //     params: JSON.stringify(params)
-                    // }, true)
-                    // .then(data => {
-                    //     self.loading = false;
-                    //     self.$message({
-                    //     message: '添加成功',
-                    //     type: 'success'
-                    //     });
-                    //     self.$router.push('/product/product/index');
-                    // })
-                    // .catch(error => {
-                    //     self.loading = false;
-                    // });
+                    console.log(self.form.model,params,'表')
+                    let  arr = self.form.model.spec_many.spec_list.filter((item,index)=>{
+                        return item.type&&item.typeList.length==0
+                    })                
+                    if(arr.length!=0){
+                        self.$message({
+                            message: '请检查数据是否添写',
+                            type: 'error'
+                        });
+                        return ;
+                    }
+                    self.loading = true;
+                    ExperimentApi.experimentAdd({
+                        params
+                    }, true)
+                    .then(data => {
+                        self.loading = false;
+                        self.$message({
+                        message: '添加成功',
+                        type: 'success'
+                        });
+                        self.$router.push('/experiment/experimentlist');
+                    })
+                    .catch(error => {
+                        self.loading = false;
+                    });
+                   
                 }else{
                     self.$message({
                     message: '请检查必填项是否填写完整',

@@ -13,17 +13,17 @@
                 <el-table-column label="序号" align="center" width="60">
                   <template v-if="scope.row" slot-scope="scope">
                     <!-- {{scope.$index}} -->
-                    {{groupName(scope.row.group_name)}}
+                    {{groupName(scope.row.item_id)}}
                   </template>
                 </el-table-column>
                 <el-table-column label="检测项目" align="center">
                     <template v-if="scope.row" slot-scope="scope">
-                      {{scope.row.group_name}}
+                      {{scope.row.item_name}}
                     </template>
                 </el-table-column>
                 <el-table-column label="标准要求" align="center">
                     <template v-if="scope.row" slot-scope="scope">
-                        <span>{{scope.row.spec_value}}</span> 
+                        <span>{{scope.row.item_subclass}}</span> 
                     </template>
                 </el-table-column>
                 <el-table-column label="类型" align="center">
@@ -42,6 +42,7 @@
                               <span v-for="(item,index) in scope.row.typeList" :key="index">{{item}}</span>
                           </span>
                           <el-button type="text" @click="addType(scope.row,scope.$index)">选择</el-button>
+                          <!-- <span v-show="scope.row.type&&scope.row.typeList.length==0" style="color:brown">请填写数据</span> -->
                         </div>        
                     </template>
                 </el-table-column>
@@ -189,7 +190,7 @@
                     this.pos = 0;
                 } else {
                     // 判断当前元素与上一个元素是否相同
-                    if (data[i].group_name == data[i - 1].group_name) {
+                    if (data[i].item_id == data[i - 1].item_id) {
                         this.spanArr[this.pos] += 1;
                         this.spanArr.push(0);
                     } else {
@@ -219,7 +220,7 @@
           let a = 0;
           let self = this;
           self.form.model.spec_many.spec_attr.filter((item,index)=>{
-            a= item.group_name==e?index+1:1
+            a= item.item_id==e?index+1:1
           })
           return a
         },
@@ -231,7 +232,7 @@
         dialogFormVisible(){
           this.typeForm.type1 = '';
           this.typeForm.type2 = '';
-          this.typeForm.type3 = '';
+          this.typeForm.type4 = '';
           this.typeForm.type5 = '';
           this.dialogVisible = false;
         },
