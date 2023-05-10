@@ -2,7 +2,7 @@
     <div class="user">
       <!--添加等级-->
       <div class="common-level-rail">
-        <el-button size="small" type="primary" @click="addClick" icon="el-icon-plus" v-auth="'/user/tag/add'">添加类型</el-button>
+        <el-button size="small" type="primary" @click="addClick" icon="el-icon-plus">添加类型</el-button>
       </div>
       <!--内容-->
       <div class="product-content">
@@ -13,8 +13,8 @@
             <el-table-column prop="create_time" label="创建时间"></el-table-column>
             <el-table-column fixed="right" label="操作" width="90">
               <template slot-scope="scope">
-                <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/user/tag/edit'" >编辑</el-button>
-                <el-button @click="deleteClick(scope.row)" type="text" size="small"  v-auth="'/user/tag/delete'">删除</el-button>
+                <el-button @click="editClick(scope.row)" type="text" size="small">编辑</el-button>
+                <el-button @click="deleteClick(scope.row)" type="text" size="small">删除</el-button>
               </template>
             </el-table-column>
           </el-table>

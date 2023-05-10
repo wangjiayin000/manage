@@ -66,17 +66,7 @@ export default{
 
                 self.$refs.form.validate(valid => {
                 if (valid) {
-                    console.log(self.form.model,params,'表')
-                    let  arr = self.form.model.spec_many.spec_list.filter((item,index)=>{
-                        return item.type&&item.typeList.length==0
-                    })                
-                    if(arr.length!=0){
-                        self.$message({
-                            message: '请检查数据是否添写',
-                            type: 'error'
-                        });
-                        return ;
-                    }
+                    console.log(params,'表')
                     self.loading = true;
                     ExperimentApi.experimentAdd({
                         params

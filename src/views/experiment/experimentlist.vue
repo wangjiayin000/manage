@@ -3,8 +3,8 @@
          <!--搜索表单-->
         <div class="common-seach-wrap">
         <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
-            <el-form-item label="商品名称">
-                <el-input size="small" v-model="searchForm.name" placeholder="请输入商品名称"></el-input>
+            <el-form-item label="试验名称">
+                <el-input size="small" v-model="searchForm.name" placeholder="请输入试验名称"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button size="small" type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
@@ -12,7 +12,7 @@
         </el-form>
         </div>
         <div class="common-level-rail">
-            <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick" v-auth="'/product/product/add'">添加试验</el-button>
+            <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick">添加试验</el-button>
         </div>
             <!--内容-->
        <div class="product-content">
@@ -21,12 +21,12 @@
                 <el-table-column prop="name" label="名称"></el-table-column>
                 <el-table-column prop="name" label="类型"></el-table-column>
                 <el-table-column prop="create_time" label="发布时间"></el-table-column>
-                <el-table-column fixed="right" label="操作" width="80">
+                <el-table-column fixed="right" label="操作" width="90">
                     <template slot-scope="scope">
-                    <div class="table-btn-column">
-                        <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/product/product/edit'">编辑</el-button>
-                        <el-button @click="delClick(scope.row)" type="text" size="small" v-auth="'/product/product/delete'">删除</el-button>
-                    </div>
+                    <!-- <div class="table-btn-column"> -->
+                        <el-button @click="editClick(scope.row)" type="text" size="small">编辑</el-button>
+                        <el-button @click="delClick(scope.row)" type="text" size="small">删除</el-button>
+                    <!-- </div> -->
                     </template>
                 </el-table-column>
                 </el-table>

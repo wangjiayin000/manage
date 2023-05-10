@@ -35,17 +35,6 @@
                       </el-switch>
                     </template>
                 </el-table-column>
-                <el-table-column label="数据" align="center">
-                    <template v-if="scope.row" slot-scope="scope">
-                        <div v-show="scope.row.type">
-                          <span v-show="scope.row.typeList.length>0">
-                              <span v-for="(item,index) in scope.row.typeList" :key="index">{{item}}</span>
-                          </span>
-                          <el-button type="text" @click="addType(scope.row,scope.$index)">选择</el-button>
-                          <!-- <span v-show="scope.row.type&&scope.row.typeList.length==0" style="color:brown">请填写数据</span> -->
-                        </div>        
-                    </template>
-                </el-table-column>
                 <el-table-column label="单位" align="center">
                   <template v-if="scope.row" slot-scope="scope">
                     <el-select size="small" v-model="scope.row.items" placeholder="符号">
@@ -240,7 +229,7 @@
           let self = this;
           self.$refs.typeForm.validate((valid)=>{
             if (valid) {
-              self.tableData[self.index].typeList = Object.values(self.typeForm)
+              // self.tableData[self.index].typeList = Object.values(self.typeForm)
               this.dialogFormVisible()
             }
           })

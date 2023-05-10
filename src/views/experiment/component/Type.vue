@@ -114,7 +114,6 @@
                   item_subclass_id: data.data['item_subclass_id'],
                   items:'',
                   type:0,
-                  typeList:[],
                   item_subclass: specAttr.item_subclass
                 });
                 // 清空输入内容
@@ -149,7 +148,6 @@
                   if (overlap.length > 0) {
                     specArr[i].items = overlap[0].items;
                     specArr[i].type = overlap[0].type;
-                    specArr[i].typeList = overlap[0].typeList;
                   }
                 }
               }
