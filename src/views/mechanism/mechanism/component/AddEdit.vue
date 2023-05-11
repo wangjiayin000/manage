@@ -93,7 +93,6 @@
         },
         /*关闭弹窗*/
         dialogFormVisible(e) {
-          console.log(e)
           if (e) {
             this.$emit('closeDialog', {
               type: 'success',

@@ -163,9 +163,16 @@
         editClick(item) {
           this.userModel = deepClone(item);
           this.open_type = 1;
-          this.open_edit = true;
+          this.open_add = true;
         },
-
+        closeDialogFunc(e,f){
+          if (f == 'add') {
+          this.open_add = e.openDialog;
+          if (e.type == 'success') {
+            this.getTableList();
+          }
+        }
+        },
         // /*打开添加*/
         // showBatchDelivery() {
         //   this.$router.push('/supplier/supplier/add');

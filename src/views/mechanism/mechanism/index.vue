@@ -61,10 +61,11 @@
           <el-table-column prop="create_time" label="添加时间" width="150"></el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template slot-scope="scope">
-              <el-button @click="recycle(scope.row,0)" type="text" size="small" v-auth="'/supplier/supplier/edit'" v-if="scope.row.is_recycle==1" style="color:gray;">开启</el-button>
-              <el-button @click="recycle(scope.row,1)" type="text" size="small" v-auth="'/supplier/supplier/edit'" v-else>禁用</el-button>
-              <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/supplier/supplier/edit'">编辑</el-button>
-              <el-button @click="deleteClick(scope.row.shop_supplier_id)" type="text" size="small" v-auth="'/supplier/supplier/delete'">删除</el-button>
+              <!-- <el-button @click="recycle(scope.row,0)" type="text" size="small" v-if="scope.row.is_recycle==1" style="color:gray;">开启</el-button>
+              <el-button @click="recycle(scope.row,1)" type="text" size="small" v-else>禁用</el-button> -->
+              <el-button @click="addPuthClick()" type="text" size="small">机构数据</el-button>
+              <el-button @click="addEditClick(scope.row)" type="text" size="small">编辑</el-button>
+              <el-button @click="deleteClick(scope.row.shop_supplier_id)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -184,7 +185,7 @@
 
       /*打开添加*/
       /**添加机构 */
-      addEditClick(){
+      addEditClick(row){
         this.open_addedit = true;
       },
         /**机构数据 */
@@ -192,16 +193,16 @@
         this.$router.push('/mechanism/mechanism/organization');
       },
       /*打开编辑*/
-      editClick(row) {
-        let self = this;
-        let params = row.shop_supplier_id;
-        this.$router.push({
-          path: '/supplier/supplier/edit',
-          query: {
-            shop_supplier_id: params
-          }
-        })
-      },
+      // editClick(row) {
+      //   let self = this;
+      //   let params = row.shop_supplier_id;
+      //   this.$router.push({
+      //     path: '/supplier/supplier/edit',
+      //     query: {
+      //       shop_supplier_id: params
+      //     }
+      //   })
+      // },
       /* 强制下架上架*/
       recycle(row,state){
         let self = this;
