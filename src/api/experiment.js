@@ -15,6 +15,10 @@ let ExperimentApi = {
     /*添加试验子类*/
     experimentAdd(data, errorback) {
         return request._post('/shop/experiment.experiment/add', data, errorback);
+    },
+     /*删除试验项目*/
+     experimentDelete(data, errorback) {
+        return request._post('/shop/experiment.experiment/delete', data, errorback);
     }
     
 }

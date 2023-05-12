@@ -10,11 +10,11 @@
           <el-form-item label="试验分类">
             <el-select v-model="formInline.category_id" placeholder="请选择试验分类">
                 <el-option :value="0" :label="'全部'"></el-option>
-                <el-option v-for="cat in cateList" :value="cat.category_id" :key="cat.category_id" :label="cat.name"></el-option>
+                <el-option v-for="cat in cateList" :value="cat.id" :key="cat.id" :label="cat.name"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="试验名称">
-            <el-input placeholder="请输入试验名称" v-model="formInline.search">
+            <el-input placeholder="请输入试验名称" v-model="formInline.experiment_name">
             <el-button slot="append" icon="el-icon-search" @click="getData">查询</el-button>
             </el-input>
           </el-form-item>
@@ -25,9 +25,9 @@
       <div class="product-content">
         <div class="table-wrap">
           <el-table size="small" :data="productList" border style="width: 100%" highlight-current-row v-loading="loading" @selection-change="tableCurrentChange">
-            <el-table-column prop="product_name" label="试验名称"></el-table-column>
-            <el-table-column prop="category.name" width="100" label="试验分类"></el-table-column>
-            <el-table-column prop="create_time" width="140" label="添加时间"></el-table-column>
+            <el-table-column prop="name" label="试验名称"></el-table-column>
+            <el-table-column prop="name" label="试验分类"></el-table-column>
+            <el-table-column prop="create_time" label="添加时间"></el-table-column>
             <el-table-column type="selection" :selectable="selectableFunc" width="44" v-if="islist"></el-table-column>
             <el-table-column width="80" label="单选" v-if="!islist">
               <template slot-scope="scope">
@@ -61,7 +61,8 @@
   </template>
   
   <script>
-  import PorductApi from '@/api/product.js';
+  import ExperimentApi from '@/api/Experiment.js';
+  import SampleApi from '@/api/Sample.js';
   export default {
     data() {
       return {
@@ -73,7 +74,10 @@
         pageSize: 20,
         /*一共多少条数据*/
         totalDataNumber: 0,
-        formInline: {},
+        formInline: {
+          category_id:0,
+          experiment_name:''
+        },
         //商品分类列表
         cateList: [],
         //商品列表
@@ -107,7 +111,7 @@
           if(n){
             this.dialogVisible=n;
             this.type='error';
-            this.params=null;
+            this.params=null;     
             this.getData();
           }
         }
@@ -138,21 +142,20 @@
         this.pageSize = val;
         this.getData();
       },
-  
-      /*获取商品列表*/
+   
+      /*获取试验列表*/
       getData() {
         let self = this;
         let params = self.formInline;
         params.page = self.curPage;
-        params.list_rows = self.pageSize;
-        PorductApi.chooseLists(params, true)
+        SampleApi.sampleGetExperimentLists(params, true)
           .then(res => {
             if (res.code == 1) {
               self.loading = false;
-              self.cateList = res.data.category;
+              self.cateList = res.data.categoryList;
               /*判断是否需要去重*/
               if(self.excludeIds&&typeof(self.excludeIds)!='undefined'&&self.excludeIds.length>0){
-                res.data.list.data.forEach(item=>{
+                res.data.experimentData.data.forEach(item=>{
                   if(self.excludeIds.indexOf(item.product_id)>-1){
                     item.noChoose=false;
                   }else{
@@ -161,13 +164,13 @@
                 });
               }else{
                 if(!self.islist){
-                   res.data.list.data.forEach(item=>{
+                   res.data.experimentData.data.forEach(item=>{
                      item.noChoose=true;
                    });
                 }
               }
-              self.productList = res.data.list.data;
-              self.totalDataNumber = res.data.list.total;
+              self.productList = res.data.experimentData.data;
+              self.totalDataNumber = res.data.experimentData.total;
             }
           })
           .catch(error => {});
@@ -192,13 +195,13 @@
           return;
         }
         if (self.islist&&typeof(self.islist)!='undefined') {
-          self.multipleSelection.forEach(item=>{
-            item.image=item.image[0].file_path;
-          });
+          // self.multipleSelection.forEach(item=>{
+          //   item.image=item.image[0].file_path;
+          // });
           params = self.multipleSelection;
         } else {
           params = self.multipleSelection[0];
-          params.image = params.image[0].file_path;
+          // params.image = params.image[0].file_path;
         }
         self.params=params;
         self.type='success';

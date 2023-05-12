@@ -99,8 +99,9 @@ export default{
         /*关闭弹窗*/
         closeProductDialogFunc(e) {
             this.isproduct = e.openDialog;
+            // console.log(e.params,'www')
             if (e.type == 'success') {
-                if (this.product_arr.indexOf(e.params.product_id) > -1) {
+                if (this.product_arr.indexOf(e.params.id) > -1) {
                 this.$message({
                     message: '你已选中该产品',
                     type: 'error'
@@ -108,17 +109,16 @@ export default{
                 return false;
                 }
                 let param = {};
-                param.product_id = e.params.product_id;
-                param.product_name = e.params.product_name;
-                param.product_image = e.params.product_image;
+                param.id = e.params.id;
+                param.name = e.params.name;
                 param.sort = 1;
                 this.tableData.push(param);
-                this.product_arr.push(e.params.product_id);
+                this.product_arr.push(e.params.id);
             }
         },
          /*删除商品*/
         deleteClick(e) {
-            let index = this.product_arr.indexOf(e.product_id);
+            let index = this.product_arr.indexOf(e.id);
             this.product_arr.splice(index, 1);
             this.tableData.splice(index, 1);
         },

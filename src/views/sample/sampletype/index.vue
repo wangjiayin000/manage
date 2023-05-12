@@ -28,20 +28,14 @@
           </el-pagination>
         </div>
       </div>
-  
-      <!--添加编辑-->
-      <AddEdit v-if="open_add" :open_add="open_add" :type="open_type" :form="userModel" @closeDialog="closeDialogFunc($event, 'add')"></AddEdit> 
     </div>
   </template>
   
   <script>
     import CategoryApi from '@/api/Category.js';
-    import AddEdit from './component/AddEait.vue';
     import {deepClone} from '@/utils/base.js';
     export default {
-      components: {
-        AddEdit
-      },
+      component:{},
       data() {
         return {
           /*是否加载完成*/
@@ -114,9 +108,7 @@
   
         /*打开编辑*/
         editClick(item) {
-          this.userModel = deepClone(item);
-          this.open_type = 1;
-          this.open_edit = true;
+          this.$router.push('/sample/sampletype/add');
         },
   
         /*关闭弹窗*/

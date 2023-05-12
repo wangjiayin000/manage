@@ -111,22 +111,25 @@
             },
              /*删除*/
             delClick: function(row) {
-            let self = this;
-            let msg = '删除后不可恢复，确认删除该记录吗?';
-            self.$confirm(msg, '提示', {
-                type: 'warning'
+                let self = this;
+                let msg = '删除后不可恢复，确认删除该记录吗?';
+                self.$confirm(msg, '提示', {
+                    type: 'warning'
+                    })
+                    .then(() => {
+                        ExperimentApi.experimentDelete({
+                            id: row.id
+                        }).then(data => {
+                            self.$message({
+                            message: '删除成功',
+                            type: 'success'
+                            });
+                            self.getData();
+                        });
+                }).catch(()=>{
+                    
                 })
-                .then(() => {
-                    // PorductApi.delProduct({
-                    //     product_id: row.product_id
-                    // }).then(data => {
-                    //     self.$message({
-                    //     message: '删除成功',
-                    //     type: 'success'
-                    //     });
-                    //     self.getData();
-                    // });
-                });
+                ;
             },
             /*选择第几页*/
             handleCurrentChange(val) {
