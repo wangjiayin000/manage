@@ -20,6 +20,10 @@ let SampleApi = {
       sampleDelSampleType(data, errorback) {
         return request._post('/shop/sample.SampleManage/delSampleType', data, errorback);
     },
+     /*样品类型编辑*/
+    sampleEditShowSampleType(data, errorback) {
+        return request._post('/shop/sample.SampleManage/editShowSampleType', data, errorback);
+    },
 }
 
 export default SampleApi;

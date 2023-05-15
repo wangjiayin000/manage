@@ -1,8 +1,16 @@
 <template>
     <div class="user">
+      <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="关键词">
+          <el-input v-model="formInline.nick_name" placeholder="请输入样品名称|样品编号"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
+        </el-form-item>
+      </el-form>
       <!--添加类型-->
       <div class="common-level-rail">
-        <el-button size="small" type="primary" @click="addClick" icon="el-icon-plus">添加样品</el-button>
+        <el-button size="small" type="primary" @click="addClick" icon="el-icon-plus">添加样品类型</el-button>
       </div>
       <!--内容-->
       <div class="product-content">
@@ -43,15 +51,14 @@
           /*列表数据*/
           tableData: [],
           /*一页多少条*/
-          pageSize: 20,
+          pageSize: 10,
           /*一共多少条数据*/
           totalDataNumber: 0,
           /*当前是第几页*/
           curPage: 1,
           /*横向表单数据模型*/
           formInline: {
-            user: '',
-            region: ''
+            nick_name: ''
           },
           /*是否打开添加弹窗*/
           open_add: false,
@@ -100,7 +107,12 @@
   
             });
         },
-  
+         /*搜索查询*/
+         onSubmit() {
+          let self = this;
+          self.loading = true;
+          self.getTableList();
+        },
         /*打开添加*/
         addClick() {
           this.$router.push('/sample/sampletype/add');
@@ -108,7 +120,12 @@
   
         /*打开编辑*/
         editClick(item) {
-          this.$router.push('/sample/sampletype/add');
+          this.$router.push({
+            path:'/sample/sampletype/add',
+            query:{
+              cample_id:item.id
+            }
+          });
         },
   
         /*关闭弹窗*/

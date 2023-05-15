@@ -11,21 +11,6 @@
           <el-form-item label="关键词">
             <el-input v-model="formInline.nick_name" placeholder="请输入样品名称|样品编号"></el-input>
           </el-form-item>
-          <!-- <el-form-item label="会员等级">
-            <el-select v-model="formInline.grade_id" placeholder="请选择">
-              <el-option label="全部" value="0"></el-option>
-              <el-option v-for="(item, index) in gradeList" :key="index" :label="item.name" :value="item.grade_id">
-              </el-option>
-            </el-select>
-          </el-form-item> -->
-          <!-- <el-form-item label="来源">
-            <el-select v-model="formInline.reg_source" placeholder="请选择">
-              <el-option label="全部" value=""></el-option>
-              <el-option label="小程序" value="wx"></el-option>
-              <el-option label="APP" value="app"></el-option>
-              <el-option label="H5" value="h5"></el-option>
-            </el-select>
-          </el-form-item> -->
           <el-form-item label="录入时间">
             <div class="block">
               <span class="demonstration"></span>
@@ -38,16 +23,8 @@
           </el-form-item>
         </el-form>
         <div class="mb16">
-            <el-button type="primary">导出</el-button>
-          <!-- <span>标签</span> -->
-          <!-- <span class="pl10">
-            <el-radio-group v-model="formInline.tag_id" size="mini" @change="onSubmit">
-              <el-radio-button label="0">全部</el-radio-button>
-              <el-radio-button :label="item.tag_id" v-for="(item, index) in allTag" :key="index">
-                {{item.tag_name}}
-              </el-radio-button>
-            </el-radio-group>
-          </span> -->
+          <el-button size="small" type="primary" @click="addClick" icon="el-icon-plus">添加型号</el-button>
+          <!-- <el-button type="primary">导出</el-button> -->
         </div>
       </div>
       <!--内容-->
@@ -84,30 +61,14 @@
             :total="totalDataNumber"></el-pagination>
         </div>
       </div>
-  
-      <!--会员充值-->
-      <Recharge v-if="open_add" :open_add="open_add" :form="userModel" :gradeList="gradeList"
-        @closeDialog="closeDialogFunc($event, 'add')"></Recharge>
-      <!--会员等级-->
-      <Grade v-if="open_edit" :open_edit="open_edit" :form="userModel" :gradeList="gradeList"
-        @closeDialog="closeDialogFunc($event, 'edit')"></Grade>
-      <!--会员标签-->
-      <Tag v-if="open_tag" :open_tag="open_tag" :form="userModel" @closeDialog="closeDialogFunc($event, 'tag')"></Tag>
     </div>
   </template>
   
   <script>
     import UserApi from '@/api/user.js';
-    import Grade from './dialog/Grade.vue';
-    import Recharge from './dialog/Recharge.vue';
-    import Tag from './dialog/Tag.vue';
+ 
     export default {
-      components: {
-        /*编辑组件*/
-        Grade,
-        Recharge,
-        Tag
-      },
+      components: {},
       data() {
         return {
           /*是否加载完成*/
@@ -128,17 +89,6 @@
             tag_id: 0,
             reg_source: ''
           },
-          /*是否打开添加弹窗*/
-          open_add: false,
-          /*是否打开编辑弹窗*/
-          open_edit: false,
-          /*当前编辑的对象*/
-          userModel: {},
-          /*等级*/
-          gradeList: [],
-          open_tag: false,
-          /*所有标签*/
-          allTag: []
         };
       },
       created() {
@@ -190,51 +140,7 @@
   
         /*打开添加*/
         addClick(item) {
-          this.userModel = item;
-          this.open_add = true;
-        },
-        /*打开编辑*/
-        editClick(item) {
-          let self = this;
-          let params = item.user_id;
-          this.$router.push({
-            path: '/user/user/edit',
-            query: {
-              user_id: params
-            }
-          });
-        },
-        /*打开编辑*/
-        gradeClick(item) {
-          this.userModel = item;
-          this.open_edit = true;
-        },
-  
-        tagClick(item) {
-          this.userModel = item;
-          this.open_tag = true;
-        },
-  
-        /*关闭弹窗*/
-        closeDialogFunc(e, f) {
-          if (f == 'add') {
-            this.open_add = e.openDialog;
-            if (e.type == 'success') {
-              this.getTableList();
-            }
-          }
-          if (f == 'edit') {
-            this.open_edit = e.openDialog;
-            if (e.type == 'success') {
-              this.getTableList();
-            }
-          }
-          if (f == 'tag') {
-            this.open_tag = e.openDialog;
-            if (e.type == 'success') {
-              this.getTableList();
-            }
-          }
+          this.$router.push('/sample/samplelist/add');
         },
   
         /*删除用户*/

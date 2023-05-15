@@ -3,7 +3,7 @@
         <div class="common-level-rail">
             <el-form size="small" :model="form" ref="form">
             <el-col :span="4">
-              <el-button size="small" icon="el-icon-plus" @click="addClick">添加实验</el-button>
+              <el-button size="small" icon="el-icon-plus" @click="addClick">添加样品类型</el-button>
             </el-col>
             <el-col :span="8">
               <el-form-item label="样品名称" prop="sample_name" label-width="80px" :rules="[{required: true,message: '请输入样品名称',trigger: ['blur']}]">
@@ -32,24 +32,24 @@
             </el-table-column>
             <el-table-column label="A" width="100">
               <template slot-scope="scope">
-                <el-checkbox v-model="scope.row.a" @change="changeBox(scope.row,1)" false-label="0" true-label="1"></el-checkbox>
+                <el-checkbox v-model="scope.row.a" disabled @change="changeBox(scope.row,1)" false-label="0" true-label="1"></el-checkbox>
               </template>
             </el-table-column>
             <el-table-column label="B" width="100">
               <template slot-scope="scope">
-                <el-checkbox v-model="scope.row.b" @change="changeBox(scope.row,2)" false-label="0" true-label="1"></el-checkbox>
+                <el-checkbox v-model="scope.row.b" disabled @change="changeBox(scope.row,2)" false-label="0" true-label="1"></el-checkbox>
               </template>
             </el-table-column>
             <el-table-column label="C" width="100">
               <template slot-scope="scope">
-                <el-checkbox v-model="scope.row.c" @change="changeBox(scope.row,3)" false-label="0" true-label="1"></el-checkbox>
+                <el-checkbox v-model="scope.row.c" disabled @change="changeBox(scope.row,3)" false-label="0" true-label="1"></el-checkbox>
               </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" width="90">
+            <!-- <el-table-column fixed="right" label="操作" width="90">
               <template slot-scope="scope">
                 <el-button @click="deleteClick(scope.row)" type="text" size="small" :disabled="form.is_recommend == 0 ? true : false">删除</el-button>
               </template>
-            </el-table-column>
+            </el-table-column> -->
           </el-table>
         </div>
           <!--提交-->

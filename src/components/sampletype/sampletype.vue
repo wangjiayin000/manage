@@ -71,7 +71,7 @@
         /*当前是第几页*/
         curPage: 1,
         /*一页多少条*/
-        pageSize: 20,
+        pageSize: 10,
         /*一共多少条数据*/
         totalDataNumber: 0,
         formInline: {
