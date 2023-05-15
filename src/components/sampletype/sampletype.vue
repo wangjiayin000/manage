@@ -195,13 +195,10 @@
           return;
         }
         if (self.islist&&typeof(self.islist)!='undefined') {
-          // self.multipleSelection.forEach(item=>{
-          //   item.image=item.image[0].file_path;
-          // });
+        
           params = self.multipleSelection;
         } else {
           params = self.multipleSelection[0];
-          // params.image = params.image[0].file_path;
         }
         self.params=params;
         self.type='success';

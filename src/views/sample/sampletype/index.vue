@@ -8,7 +8,7 @@
       <div class="product-content">
         <div class="table-wrap">
           <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-            <el-table-column prop="tag_name" label="类型名称" width="300"></el-table-column>
+            <el-table-column prop="sample_name" label="类型名称" width="300"></el-table-column>
             <!-- <el-table-column prop="user_count" label="人数"></el-table-column> -->
             <el-table-column prop="create_time" label="创建时间"></el-table-column>
             <el-table-column fixed="right" label="操作" width="90">
@@ -32,7 +32,7 @@
   </template>
   
   <script>
-    import CategoryApi from '@/api/Category.js';
+    import SampleApi from '@/api/Sample.js';
     import {deepClone} from '@/utils/base.js';
     export default {
       component:{},
@@ -89,8 +89,8 @@
           let self = this;
           let Params = {};
           Params.page = self.curPage;
-          Params.list_rows = self.pageSize;
-          CategoryApi.categoryList(Params, true)
+          // Params.list_rows = self.pageSize;
+          SampleApi.sampleShowSampleType(Params, true)
             .then(data => {
               self.loading = false;
               self.tableData = data.data.list.data;
@@ -136,8 +136,8 @@
             type: 'warning'
           }).then(() => {
             self.loading = true;
-            CategoryApi.deleteTag({
-                tag_id: row.tag_id
+            SampleApi.sampleDelSampleType({
+                id: row.id
               }, true)
               .then(data => {
                 self.loading = false;
