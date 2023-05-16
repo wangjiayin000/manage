@@ -5,15 +5,16 @@
           描述：计划管理
       -->
     <div class="common-seach-wrap">
-      <el-tabs v-model="activeName">
+      <!-- <el-tabs v-model="activeName">
         <el-tab-pane label="Excel模板" name="list"></el-tab-pane>
         <el-tab-pane label="上传记录" name="log"></el-tab-pane>
-      </el-tabs>
+      </el-tabs> -->
   
       <!--Excel模板-->
-      <List v-if="activeName == 'list'"></List>
+      <!-- <List v-if="activeName == 'list'"></List> -->
       <!--上传记录-->
-      <Log v-if="activeName == 'log'"></Log>
+      <!-- <Log v-if="activeName == 'log'"></Log> -->
+      <Log></Log>
   
     </div>
   </template>

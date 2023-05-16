@@ -1,9 +1,12 @@
 <template>
     <div class="user">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="关键词">
-          <el-input v-model="formInline.nick_name" placeholder="请输入样品名称|样品编号"></el-input>
+        <el-form-item label="样品编号">
+          <el-input v-model="formInline.id" placeholder="请输入样品编号"></el-input>
         </el-form-item>
+        <el-form-item label="样品名称">
+          <el-input v-model="formInline.sample_name" placeholder="请输入样品名称"></el-input>
+        </el-form-item>     
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
         </el-form-item>
@@ -16,8 +19,8 @@
       <div class="product-content">
         <div class="table-wrap">
           <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
+            <el-table-column prop="id" label="编号"></el-table-column>
             <el-table-column prop="sample_name" label="类型名称" width="300"></el-table-column>
-            <!-- <el-table-column prop="user_count" label="人数"></el-table-column> -->
             <el-table-column prop="create_time" label="创建时间"></el-table-column>
             <el-table-column fixed="right" label="操作" width="90">
               <template slot-scope="scope">
@@ -58,7 +61,8 @@
           curPage: 1,
           /*横向表单数据模型*/
           formInline: {
-            nick_name: ''
+            id:'',
+            sample_name: ''
           },
           /*是否打开添加弹窗*/
           open_add: false,
@@ -94,7 +98,7 @@
         /*获取列表*/
         getTableList() {
           let self = this;
-          let Params = {};
+          let Params = self.formInline;
           Params.page = self.curPage;
           // Params.list_rows = self.pageSize;
           SampleApi.sampleShowSampleType(Params, true)

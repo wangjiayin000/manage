@@ -113,6 +113,7 @@ export default{
             type: 10,
             num: 20,
             product_arr: [],
+            product_item:[],
             tableData:[],
             pos:0,
             spanArr:[],
@@ -268,15 +269,22 @@ export default{
          /*删除商品*/
         deleteClick(e) {
             this.tableData =  this.tableData.filter(item=>{
-              return item.experiment_id != e.experiment_id
+              return item.item_id != e.item_id
             })
-            let index = this.product_arr.indexOf(e.experiment_id);
-            this.product_arr.splice(index, 1);
+            let arr =  this.tableData.filter(item=>{
+              return item.experiment_id == e.experiment_id
+            })
+            let index = 0
+            if(arr.length==0){
+              index = this.product_arr.indexOf(e.experiment_id);
+              this.product_arr.splice(index, 1);
+            }
+            this.getSpanId(this.tableData);
         },
         /**A,B,C单选 */
         changeBox(row,index){
             this.tableData.forEach(item=>{
-              if(item.experiment_id == row.experiment_id){
+              if(item.item_id == row.item_id){
                 item.a = row.a;
                 item.b = row.b;
                 item.c = row.c;

@@ -8,8 +8,11 @@
       <!--搜索表单-->
       <div class="common-seach-wrap">
         <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-          <el-form-item label="关键词">
-            <el-input v-model="formInline.nick_name" placeholder="请输入样品名称|样品编号"></el-input>
+          <el-form-item label="样品编号">
+            <el-input v-model="formInline.id" placeholder="请输入样品编号"></el-input>
+          </el-form-item>
+          <el-form-item label="样品名称">
+            <el-input v-model="formInline.sample_name" placeholder="请输入样品名称"></el-input>
           </el-form-item>
           <el-form-item label="录入时间">
             <div class="block">
@@ -83,11 +86,9 @@
           curPage: 1,
           /*横向表单数据模型*/
           formInline: {
-            nick_name: '',
-            grade_id: '',
+            sample_name: '',
             reg_date: '',
-            tag_id: 0,
-            reg_source: ''
+            id: ''
           },
         };
       },

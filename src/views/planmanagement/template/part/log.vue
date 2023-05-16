@@ -5,8 +5,11 @@
           描述：计划管理-上传记录
       -->
   <div class="user">
+    <div class="common-level-rail fl">
+      <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick">添加模板</el-button>
+    </div>
     <!--搜索表单-->
-    <div class="common-seach-wrap">
+    <div class="common-seach-wrap fr">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="文件名称">
           <el-input v-model="formInline.search" placeholder="请输入文件名称"></el-input>
@@ -36,7 +39,8 @@
           </el-table-column>
         </el-table>
       </div>
-
+       <!--添加编辑-->
+       <AddEdit v-if="open_add" :open_add="open_add" :type="open_type" :form="userModel" @closeDialog="closeDialogFunc($event, 'add')"></AddEdit>
       <!--分页-->
       <div class="pagination">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background :current-page="curPage"
@@ -50,9 +54,12 @@
 </template>
 
 <script>
+  import AddEdit from './AddEait.vue';
   import UserApi from '@/api/user.js';
   export default {
-    components: {},
+    components: {
+      AddEdit
+    },
     data() {
       return {
         /*是否加载完成*/
@@ -69,6 +76,9 @@
         formInline: {
           search: ''
         },
+        open_add:false,
+        open_type:0,
+        userModel:{}
       };
     },
     created() {
@@ -118,7 +128,19 @@
       },
       downloadClick(){
 
-      }
+      },
+      addClick(){
+        this.open_add = true;
+        this.open_type = 0;
+      },
+      closeDialogFunc(e,f){
+        if (f == 'add') {
+          this.open_add = e.openDialog;
+          if (e.type == 'success') {
+            this.getTableList();
+          }
+        }
+      },
     }
   };
 </script>

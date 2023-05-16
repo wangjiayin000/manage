@@ -167,11 +167,11 @@
         },
         closeDialogFunc(e,f){
           if (f == 'add') {
-          this.open_add = e.openDialog;
-          if (e.type == 'success') {
-            this.getTableList();
+            this.open_add = e.openDialog;
+            if (e.type == 'success') {
+              this.getTableList();
+            }
           }
-        }
         },
         // /*打开添加*/
         // showBatchDelivery() {
