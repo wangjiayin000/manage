@@ -8,7 +8,7 @@
       <div class="common-seach-wrap">
         <el-form :inline="true" size="small" :model="formInline" class="demo-form-inline">
           <el-form-item label="试验分类">
-            <el-select v-model="formInline.category_id" placeholder="请选择试验分类">
+            <el-select v-model="formInline.category_id" filterable placeholder="请选择试验分类">
                 <el-option :value="0" :label="'全部'"></el-option>
                 <el-option v-for="cat in cateList" :value="cat.id" :key="cat.id" :label="cat.name"></el-option>
             </el-select>

@@ -3,11 +3,11 @@
         <div class="common-level-rail">
             <el-form size="small" :model="form" ref="form">
             <el-col :span="4">
-              <el-button size="small" icon="el-icon-plus" @click="addClick">添加样品类型</el-button>
+              <el-button size="small" icon="el-icon-plus" @click="addClick">添加型号</el-button>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="样品名称" prop="sample_name" label-width="80px" :rules="[{required: true,message: '请输入样品名称',trigger: ['blur']}]">
-                <el-input v-model="form.sample_name" placeholder="请输入样品名称"></el-input>
+              <el-form-item label="型品名称" prop="sample_name" label-width="80px" :rules="[{required: true,message: '请输入型品名称',trigger: ['blur']}]">
+                <el-input v-model="form.sample_name" placeholder="请输入型品名称"></el-input>
               </el-form-item>
             </el-col>
           </el-form>

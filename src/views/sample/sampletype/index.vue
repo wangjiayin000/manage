@@ -20,7 +20,7 @@
         <div class="table-wrap">
           <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
             <el-table-column prop="id" label="编号"></el-table-column>
-            <el-table-column prop="sample_name" label="类型名称" width="300"></el-table-column>
+            <el-table-column prop="sample_name" label="类型名称"></el-table-column>
             <el-table-column prop="create_time" label="创建时间"></el-table-column>
             <el-table-column fixed="right" label="操作" width="90">
               <template slot-scope="scope">
