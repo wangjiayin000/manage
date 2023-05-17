@@ -12,7 +12,7 @@
             <el-input v-model="formInline.id" placeholder="请输入样品编号"></el-input>
           </el-form-item>
           <el-form-item label="样品名称">
-            <el-input v-model="formInline.sample_name" placeholder="请输入样品名称"></el-input>
+            <el-input v-model="formInline.cample_name" placeholder="请输入样品名称"></el-input>
           </el-form-item>
           <!-- <el-form-item label="录入时间">
             <div class="block">
@@ -34,23 +34,17 @@
       <div class="product-content">
         <div class="table-wrap">
           <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-            <el-table-column prop="user_id" label="编号" width="80"></el-table-column>
-            <el-table-column prop="nickName" label="样品名称"></el-table-column>
+            <el-table-column prop="id" label="编号" width="80"></el-table-column>
+            <el-table-column prop="sample_name" label="样品名称"></el-table-column>
             <el-table-column prop="points" label="试验进度"></el-table-column>
             <el-table-column prop="balance" label="试验结果"></el-table-column>
             <el-table-column prop="mobile" label="详细信息"></el-table-column>
             <el-table-column prop="create_time" label="录入时间" width="140"></el-table-column>
             <el-table-column fixed="right" label="操作" width="170">
               <template slot-scope="scope">
-                <!-- <el-button @click="addClick(scope.row)" type="text" size="small" v-auth="'/user/user/recharge'">充值
-                </el-button> -->
-                <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/user/user/edit'">编辑
+                <el-button @click="editClick(scope.row)" type="text" size="small">编辑
                 </el-button>
-                <!-- <el-button @click="gradeClick(scope.row)" type="text" size="small" v-auth="'/user/user/grade'">等级
-                </el-button> -->
-                <!-- <el-button @click="tagClick(scope.row)" type="text" size="small" v-auth="'/user/user/delete'">标签
-                </el-button> -->
-                <el-button @click="deleteClick(scope.row)" type="text" size="small" v-auth="'/user/user/delete'">删除
+                <el-button @click="deleteClick(scope.row)" type="text" size="small">删除
                 </el-button>
               </template>
             </el-table-column>
@@ -68,7 +62,7 @@
   </template>
   
   <script>
-    import UserApi from '@/api/user.js';
+    import SampleApi from '@/api/Sample.js';
  
     export default {
       components: {},
@@ -86,7 +80,7 @@
           curPage: 1,
           /*横向表单数据模型*/
           formInline: {
-            sample_name: '',
+            cample_name: '',
             // reg_date: '',
             id: ''
           },
@@ -117,9 +111,10 @@
           let self = this;
           let Params = self.formInline;
           Params.page = self.curPage;
-          Params.list_rows = self.pageSize;
-          UserApi.userlist(Params, true)
+          // Params.list_rows = self.pageSize;
+          SampleApi.sampleShowSampleList(Params, true)
             .then(data => {
+              console.log(data)
               self.loading = false;
               self.tableData = data.data.list.data;
               self.totalDataNumber = data.data.list.total;
@@ -143,7 +138,15 @@
         addClick(item) {
           this.$router.push('/sample/samplelist/add');
         },
-  
+         /*打开编辑*/
+         editClick(item) {
+          this.$router.push({
+            path:'/sample/samplelist/add',
+            query:{
+              cample_id:item.id
+            }
+          });
+        },
         /*删除用户*/
         deleteClick(row) {
           let self = this;
@@ -155,8 +158,8 @@
             })
             .then(() => {
               self.loading = true;
-              UserApi.deleteuser({
-                    user_id: row.user_id
+              SampleApi.sampleDelSampleList({
+                cample_id: row.id
                   },
                   true
                 )

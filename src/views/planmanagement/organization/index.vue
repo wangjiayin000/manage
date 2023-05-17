@@ -5,16 +5,17 @@
          描述：计划管理-机构管理
      -->
    <div class="common-seach-wrap">
-     <el-tabs v-model="activeName">
+     <!-- <el-tabs v-model="activeName">
        <el-tab-pane label="选择机构" name="list"></el-tab-pane>
        <el-tab-pane label="上传记录" name="log"></el-tab-pane>
-     </el-tabs>
+     </el-tabs> -->
  
      <!--选择机构-->
-     <List v-if="activeName == 'list'"></List>
-     <!--上传记录-->
-     <Log v-if="activeName == 'log'"></Log>
- 
+     <!-- <List v-if="activeName == 'list'"></List> -->
+     <!-- 上传记录 -->
+     <!-- <Log v-if="activeName == 'log'"></Log> -->
+     <Log></Log>
+
    </div>
  </template>
  <script>

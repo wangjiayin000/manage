@@ -5,11 +5,14 @@
           描述：计划管理-上传记录
       -->
   <div class="user">
+    <div class="common-level-rail fl">
+      <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick">选择机构</el-button>
+    </div>
     <!--搜索表单-->
-    <div class="common-seach-wrap">
+    <div class="common-seach-wrap fr">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="文件名称">
-          <el-input v-model="formInline.search" placeholder="请输入文件名称"></el-input>
+        <el-form-item label="机构名称">
+          <el-input v-model="formInline.search" placeholder="请输入机构名称"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
@@ -112,6 +115,10 @@
         let self = this;
         self.curPage = 1;
         self.getTableList();
+      },
+      /**选择机构 */
+      addClick(){
+
       },
       viewClick(){
 

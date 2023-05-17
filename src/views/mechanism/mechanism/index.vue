@@ -27,7 +27,7 @@
     </div>
     <div class="mb16">
         <el-button size="small" type="primary" @click="addEditClick" icon="el-icon-plus">添加机构</el-button>
-        <el-button size="small" type="primary" @click="addPuthClick" icon="el-icon-plus">机构数据</el-button>
+        <!-- <el-button size="small" type="primary" @click="addPuthClick" icon="el-icon-plus">机构数据</el-button> -->
     </div>
     <!--内容-->
     <div class="product-content">

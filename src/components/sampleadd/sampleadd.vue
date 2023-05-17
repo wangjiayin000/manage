@@ -13,8 +13,8 @@
           </el-form>
           <el-form size="small" :model="form" ref="form" v-if="sampletypes=='2'">
             <el-col :span="8">
-              <el-form-item label="样品类型" prop="id" label-width="80px" :rules="[{required: true,message: '请选择样品类型',trigger: ['blur','change']}]">
-                <el-select v-model="form.id" @change="changeClass" filterable placeholder="请选择样品类型">
+              <el-form-item label="样品类型" prop="sampletype_id" label-width="80px" :rules="[{required: true,message: '请选择样品类型',trigger: ['blur','change']}]">
+                <el-select v-model="form.sampletype_id" @change="changeClass" filterable placeholder="请选择样品类型">
                     <!-- <el-option :value="0" :label="'全部'"></el-option> -->
                     <el-option v-for="cat in cateList" :value="cat.id" :key="cat.id" :label="cat.sample_name"></el-option>
                 </el-select>
@@ -135,6 +135,7 @@ export default{
         return{
             form: {
               id:'',
+              sampletype_id:'',
               sample_name: '',
               experiment_id:[],
               sample_list:[]
@@ -204,22 +205,20 @@ export default{
       getData() {
         let self = this;
         let Params = {}
-        if(self.sampletypes=='1'){
-          Params = {
-            cample_id:self.$route.query.cample_id || ''
-          };
-        }else{
-          Params = {
-            cample_id:self.form.id || ''
-          };
-        }
-       
+        Params = {
+          cample_id:self.$route.query.cample_id || ''
+        };
+        self.sampleEditShowSampleType(Params);
+      },
+      /**样品类型接口 */
+      sampleEditShowSampleType(Params){
+        let self = this;
         self.loading = true;
         SampleApi.sampleEditShowSampleType(Params, true)
           .then(res => {
             self.loading = false;
             let {data} = res
-            self.form.sample_name = self.sampletypes=='1' ? data.list.sample_name : '';
+            self.form.sample_name = self.sampletypes=='1' ? data.list.sample_name : self.form.sample_name;
             let index = 0;
             data.list.data.forEach(item => {
               index = self.product_arr.indexOf(item.experiment_id);
@@ -374,7 +373,26 @@ export default{
               self.form.experiment_id = self.product_arr;
               self.form.sample_list = self.tableData;
               self.loading = true;
-              SampleApi.sampleAddSampleType(self.form, true)
+              if(self.sampletypes=='1'){
+                self.sampleAddSampleType();
+              }else if(self.sampletypes=='2'){
+                self.sampleAddSampleListt();
+              }else if(self.sampletypes=='3'){
+                  console.log(this.sampletypes,'样品型号')
+              }else{
+                console.log('错误')
+              }
+
+             
+            }
+          })
+        },
+        sampleAddSampleType(){
+          let self = this;
+          let parmas = self.form;
+          delete parmas.sampletype_id;
+          console.log(parmas,'样品类型')
+          SampleApi.sampleAddSampleType(parmas, true)
               .then(res => {
                 self.loading = false;
                 if(res.code==1){
@@ -394,8 +412,32 @@ export default{
               .catch(error => {
                 self.loading = false;
               });
-            }
-          })
+        },
+        sampleAddSampleListt(){
+          let self = this;
+          let parmas = self.form;
+          delete parmas.experiment_id;
+          console.log(parmas,'样品名称')
+          SampleApi.sampleAddSampleListt(parmas, true)
+              .then(res => {
+                self.loading = false;
+                if(res.code==1){
+                  self.$message({
+                    message: res.msg,
+                    type: 'success'
+                  });
+                  self.$router.push('/sample/samplelist/index');
+                }else{
+                  self.$error({
+                    message: res.msg,
+                    type: 'success'
+                  });
+                }
+                
+              })
+              .catch(error => {
+                self.loading = false;
+              });
         }
 
     }
