@@ -8,11 +8,11 @@
       <!--搜索表单-->
       <div class="common-seach-wrap">
         <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-          <el-form-item label="样品编号">
-            <el-input v-model="formInline.id" placeholder="请输入样品编号"></el-input>
+          <el-form-item label="型品编号">
+            <el-input v-model="formInline.id" placeholder="请输入型品编号"></el-input>
           </el-form-item>
-          <el-form-item label="样品名称">
-            <el-input v-model="formInline.sample_name" placeholder="请输入样品名称"></el-input>
+          <el-form-item label="型品名称">
+            <el-input v-model="formInline.sample_name" placeholder="请输入型品名称"></el-input>
           </el-form-item>
           <!-- <el-form-item label="录入时间">
             <div class="block">
@@ -26,7 +26,7 @@
           </el-form-item>
         </el-form>
         <div class="mb16">
-          <el-button size="small" type="primary" @click="addClick" icon="el-icon-plus">添加样品</el-button>
+          <el-button size="small" type="primary" @click="addClick" icon="el-icon-plus">添加型号</el-button>
           <!-- <el-button type="primary">导出</el-button> -->
         </div>
       </div>
@@ -35,7 +35,7 @@
         <div class="table-wrap">
           <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
             <el-table-column prop="user_id" label="编号" width="80"></el-table-column>
-            <el-table-column prop="nickName" label="样品名称"></el-table-column>
+            <el-table-column prop="nickName" label="型品名称"></el-table-column>
             <el-table-column prop="points" label="试验进度"></el-table-column>
             <el-table-column prop="balance" label="试验结果"></el-table-column>
             <el-table-column prop="mobile" label="详细信息"></el-table-column>
@@ -141,7 +141,7 @@
   
         /*打开添加*/
         addClick(item) {
-          this.$router.push('/sample/samplelist/add');
+          this.$router.push('/sample/samplemodel/add');
         },
   
         /*删除用户*/

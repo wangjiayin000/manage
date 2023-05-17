@@ -24,6 +24,10 @@ let SampleApi = {
     sampleEditShowSampleType(data, errorback) {
         return request._post('/shop/sample.SampleManage/editShowSampleType', data, errorback);
     },
+     /*样品类型编辑*/
+     sampleShowSampleTypeList(data, errorback) {
+        return request._post('/shop/sample.SampleManage/showSampleTypeList', data, errorback);
+    }
 }
 
 export default SampleApi;

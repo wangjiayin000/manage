@@ -5,7 +5,7 @@
           <el-input v-model="formInline.id" placeholder="请输入样品编号"></el-input>
         </el-form-item>
         <el-form-item label="样品名称">
-          <el-input v-model="formInline.sample_name" placeholder="请输入样品名称"></el-input>
+          <el-input v-model="formInline.sample_name" placeholder="请输入样品类型名称"></el-input>
         </el-form-item>     
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>

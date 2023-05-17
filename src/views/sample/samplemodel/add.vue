@@ -1,6 +1,6 @@
 <template>
   <div class="sampletypeadd">
-      <sampleadd sampletypes="2"></sampleadd>
+      <sampleadd sampletypes="3"></sampleadd>
   </div>
 </template>
 <script>
