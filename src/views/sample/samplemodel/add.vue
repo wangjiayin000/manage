@@ -149,6 +149,7 @@ export default{
   },
   mounted(){   
     this.sampleShowSampleListModel();
+
     this.init();
   },
   methods:{
@@ -165,6 +166,7 @@ export default{
     },
     init(){
       let self = this;
+      if(!self.$route.query.cample_id) return
       let  Params = {
         samplemodel_id:self.$route.query.cample_id || ''
       };
@@ -174,7 +176,7 @@ export default{
           self.loading = false;
           let {data} = res
           self.form.sample_name = data.list.sample_name;
-          self.form.sampletype_id = data.list.sample_type_id;
+          self.form.samplelist_id = data.list.samplemodel_id;
           let index = 0;
           data.list.data.forEach(item => {
             index = self.product_arr.indexOf(item.experiment_id);
@@ -197,7 +199,7 @@ export default{
     getData() {
       let self = this;
       let Params = {
-        cample_id:self.form.sampletype_id || ''
+        cample_id:self.form.samplelist_id || ''
       };
       self.loading = true;
       SampleApi.sampleEditShowSampleList(Params, true)

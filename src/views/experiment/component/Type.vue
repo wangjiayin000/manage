@@ -1,7 +1,7 @@
 <template>
     <div class="experimentlist-type">
         <div class="spec-wrap">
-            <div class="mb16 min-spc" :key="attr.group_name" v-for="(attr, index) in form.model.spec_many.spec_attr">
+            <div class="mb16 min-spc" :key="attr.group_name" v-for="(attr, index) in form.model.spec_attr">
                 <div class="spec-hd">
                 <div class="input-box">{{ attr.item_name }}</div>
                 <a href="javascript:void(0);" @click="onDeleteGroup(index)"><i class="el-icon-delete"></i></a>
@@ -39,7 +39,7 @@
 <script>
   import ExperimentApi from '@/api/Experiment.js';
   export default{
-      inject:['form'],
+      
         data(){
             return{
                 showAddGroupBtn:true,
@@ -51,6 +51,11 @@
                 },
                 groupLoading: false
             }
+        },
+        inject:['form'],
+        created(){
+        },
+        mounted(){
         },
         methods:{
              /*显示/隐藏添加规则组 */
@@ -74,7 +79,7 @@
                 .then(res => {
                   self.groupLoading = false;
                   // 记录规格数据
-                  self.form.model.spec_many.spec_attr.push({
+                  self.form.model.spec_attr.push({
                     item_id: res.data['item_id'],
                     item_name: self.addGroupFrom.specName,
                     spec_items: [],
@@ -128,7 +133,7 @@
             /*构建规格组合列表*/
             buildSkulist() {
               let self = this;
-              let spec_attr = self.form.model.spec_many.spec_attr;
+              let spec_attr = self.form.model.spec_attr;
               let specArr = [];
               spec_attr.forEach((item,index)=>{
                 item.spec_items.forEach((val,i)=>{
@@ -140,9 +145,9 @@
                  })
               })
               // 合并旧数据
-              if (self.form.model.spec_many.spec_list.length > 0 && specArr.length > 0) {
+              if (self.form.model.spec_list.length > 0 && specArr.length > 0) {
                 for (let i = 0; i < specArr.length; i++) {
-                  let overlap = self.form.model.spec_many.spec_list.filter(function(val) {
+                  let overlap = self.form.model.spec_list.filter(function(val) {
                     return val.item_subclass_id == specArr[i].item_subclass_id;
                   });
                   if (overlap.length > 0) {
@@ -151,8 +156,8 @@
                   }
                 }
               }
-              self.form.model.spec_many.spec_list = specArr;
-              // console.log(self.form.model.spec_many.spec_list,'数据')
+              self.form.model.spec_list = specArr;
+              // console.log(self.form.model.spec_list,'数据')
             },
             /*删除规格组事件*/
             onDeleteGroup(index) {
@@ -162,7 +167,7 @@
                 })
                 .then(() => {
                 // 删除指定规则组
-                self.form.model.spec_many.spec_attr.splice(index, 1);
+                self.form.model.spec_attr.splice(index, 1);
                 // 构建规格组合列表
                 self.buildSkulist();
                 });
@@ -184,7 +189,7 @@
                 })
                 .then(() => {
                 // 删除指定规则组
-                self.form.model.spec_many.spec_attr[index].spec_items.splice(itemIndex, 1);
+                self.form.model.spec_attr[index].spec_items.splice(itemIndex, 1);
                 // 构建规格组合列表
                 self.buildSkulist();
                 });

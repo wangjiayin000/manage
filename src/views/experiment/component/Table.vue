@@ -28,18 +28,30 @@
                 </el-table-column>
                 <el-table-column label="类型" align="center">
                     <template v-if="scope.row" slot-scope="scope">
+                      <div v-if="show">
+                        <span>{{scope.row.type | typeItem}}</span>
+                    </div>
+                    <div v-else>
                       <el-switch
                         v-model="scope.row.type"
                         active-text="数据"
                         inactive-text="文字">
                       </el-switch>
+                    </div>
+                     
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" align="center">
                   <template v-if="scope.row" slot-scope="scope">
-                    <el-select size="small" v-model="scope.row.items" placeholder="符号">
+                    <div v-if="show">
+                        <span>{{scope.row.items}}</span>
+                    </div>
+                    <div v-else>
+                      <el-select size="small" v-model="scope.row.items" placeholder="符号">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label"></el-option>
-                    </el-select>
+                      </el-select>
+                    </div>
+                   
                   </template>
                 </el-table-column>
                 
@@ -160,14 +172,59 @@
       inject: ['form'],
       mounted() {
       },
+      filters:{
+        typeItem(e){
+          if(e==1){
+            return '数据'
+          }else{
+            return "文字"
+          }
+        }
+      },
       computed:{
         tableData(){
           let self = this
-          self.getSpanId(self.form.model.spec_many.spec_list)
-          return self.form.model.spec_many.spec_list
+          if(self.$route.query.id) this.buildSkulist()
+          self.getSpanId(self.form.model.spec_list)
+          return self.form.model.spec_list
+        },
+        show(){
+          let show = false
+          if(this.$route.query.id) show = true
+          return show
         }
       },
       methods: {
+        buildSkulist() {
+          let self = this;
+          let spec_attr = self.form.model.spec_attr;
+          let specArr = [];
+          spec_attr.forEach((item,index)=>{
+            item.sub_class.forEach((val,i)=>{
+                specArr.push({
+                  item_id: item.item_id,
+                  item_name:item.name,
+                  item_subclass_id:val.item_subclass_id,
+                  items:val.items,
+                  type:val.type,
+                  item_subclass:val.item_subclass_name
+                  })
+              })
+          })
+          // 合并旧数据
+          if (self.form.model.spec_list.length > 0 && specArr.length > 0) {
+            for (let i = 0; i < specArr.length; i++) {
+              let overlap = self.form.model.spec_list.filter(function(val) {
+                return val.item_subclass_id == specArr[i].item_subclass_id;
+              });
+              if (overlap.length > 0) {
+                specArr[i].items = overlap[0].items;
+                specArr[i].type = overlap[0].type;
+              }
+            }
+          }
+          self.form.model.spec_list = specArr;
+        },
         getSpanId(data) {
             // data就是我们从后台拿到的数据
             this.spanArr = []
@@ -208,7 +265,7 @@
         groupName(e){
           let a = 0;
           let self = this;
-          self.form.model.spec_many.spec_attr.filter((item,index)=>{
+          self.form.model.spec_attr.filter((item,index)=>{
             a= item.item_id==e?index+1:1
           })
           return a

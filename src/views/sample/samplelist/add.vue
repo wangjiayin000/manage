@@ -110,6 +110,7 @@ export default{
       },
       init(){
         let self = this;
+        if(!self.$route.query.cample_id) return
         let  Params = {
           cample_id:self.$route.query.cample_id || ''
         };

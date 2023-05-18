@@ -19,7 +19,11 @@ let ExperimentApi = {
      /*删除试验项目*/
      experimentDelete(data, errorback) {
         return request._post('/shop/experiment.experiment/delete', data, errorback);
-    }
+    },
+      /*编辑试验项目*/
+    experimentEdit(data, errorback) {
+        return request._get('/shop/experiment.experiment/edit', data, errorback);
+    },
     
 }
 

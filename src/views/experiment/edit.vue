@@ -12,8 +12,8 @@
             <Many v-show="activeName == 'many'"></Many>
             <!--提交-->
             <div class="common-button-wrapper">
-                <el-button size="small" type="info" @click="cancelFunc">{{show?'返回':'取消' }}</el-button>
-                <el-button size="small" v-if="!show" type="primary" @click="onSubmit" :loading="loading">保存</el-button>
+                <el-button size="small" type="info" @click="cancelFunc">取消</el-button>
+                <el-button size="small" type="primary" @click="onSubmit" :loading="loading">保存</el-button>
             </div>
         </el-form>
     </div>
@@ -27,11 +27,6 @@ export default{
             Basic,
             Many
         },
-        provide(){
-            return {
-                form: this.form
-            }
-        },
         data(){
             return{
                 activeName: 'basic',
@@ -41,7 +36,7 @@ export default{
                 form: {
                     model: {
                         name:'',
-                        category_id:'', 
+                        category_id:'',  
                         spec_attr:[], 
                         spec_list:[]
                     }        
@@ -49,15 +44,13 @@ export default{
                 info:{}
             }
         },
+        provide(){
+            return {
+                form:this.form
+            }
+        },
         created(){
             if(this.$route.query.id) this.init()
-        },
-        computed:{
-            show(){
-            let show = false
-            if(this.$route.query.id) show = true
-            return show
-            }
         },
         methods:{
             init(){

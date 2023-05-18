@@ -15,7 +15,7 @@ let CategoryApi = {
     /*删除类型*/
     deleteCategory(data, errorback) {
         return request._post('/shop/experiment.category/delete', data, errorback);
-    },
+    }
 }
 
 export default CategoryApi;

@@ -1,6 +1,6 @@
 <template>
     <div class="experimentMany">
-        <Type></Type>
+        <Type v-if="!this.$route.query.id"></Type>
         <Table></Table>
     </div>
 </template>
