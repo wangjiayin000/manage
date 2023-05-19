@@ -323,6 +323,7 @@
         formData.append('iFile', param.file);
         formData.append("group_id", self.activeType);
         formData.append("file_type", self.this_config.file_type);
+        console.log(formData,'formData')
         FileApi.uploadFile(formData)
           .then(response => {
             loading.close();

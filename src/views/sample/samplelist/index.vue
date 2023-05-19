@@ -114,7 +114,6 @@
           // Params.list_rows = self.pageSize;
           SampleApi.sampleShowSampleList(Params, true)
             .then(data => {
-              console.log(data)
               self.loading = false;
               self.tableData = data.data.list.data;
               self.totalDataNumber = data.data.list.total;

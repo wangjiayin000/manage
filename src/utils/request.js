@@ -13,13 +13,17 @@ axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;char
 axios.defaults.baseURL = '/index.php'; //配置接口地址
 axios.defaults.withCredentials = true;
 axios.defaults.responseType = 'json';
-
 //POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use((config) =>
 {
     // console.log(config);
     //在发送请求之前做某件事
-    if (config.method === 'post' && config.url != '/shop/file.upload/image') {
+    let list = [
+        '/shop/file.upload/image',
+        '/shop/project.TemplateManagement/uploadTemplate',
+        '/shop/template.upload/uploadFile'
+    ]//上传文件用
+    if (config.method === 'post' && !list.includes(config.url)) {
         config.data = qs.stringify(config.data);
     }
     return config;
@@ -116,11 +120,11 @@ export function _upload(url, formData, errorback)
 {
     return new Promise((resolve, reject) =>
     {
-        /*let config = {
-         headers: {
-         'Content-Type': 'multipart/form-data'
-         }
-         */
+        // /*let config = {
+        //  headers: {
+        //  'Content-Type': 'multipart/form-data'
+        //  }
+        //  */
         axios.post(url, formData, {"Content-Type": "multipart/form-data"})
             .then(response =>
             {

@@ -7,22 +7,16 @@
   <el-dialog title="添加模板" :visible.sync="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false" width="600px">
     <el-form size="small" :model="form" ref="form">
-      <el-form-item label="样品名称" :label-width="formLabelWidth" prop="name" :rules="[{required: true,message: '请选择样品',trigger: ['blur', 'change']}]">
-        <el-select v-model="form.name" placeholder="请选择样品">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
+      <el-form-item label="模板名称" :label-width="formLabelWidth" prop="file_name" :rules="[{required: true,message: '请输入模板名称',trigger: ['blur']}]">
+        <el-input v-model="form.file_name" style="width:50%" placeholder="请输入模板名称"></el-input>
       </el-form-item>
-      <el-form-item label="模板文件" :label-width="formLabelWidth" prop="fileForm" :rules="[{required: true,message: '请上传文件',trigger: ['blur', 'change']}]">
+      <el-form-item label="模板文件" :label-width="formLabelWidth" prop="file" :rules="[{required: true,message: '请上传文件',trigger: ['blur', 'change']}]">
         <div>
             <el-upload class="avatar-uploader" ref="upload" action="string"
-            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            :before-upload="onBeforeUploadImage" :http-request="UploadImage" :show-file-list="false">
-            <el-button size="small" icon="el-icon-upload" type="primary">上传模板</el-button>
+              accept=".xlsx,.xlsm,.xls" :limit="1" :before-upload="onBeforeUploadImage" 
+              :http-request="UploadImage" :on-change="onChange" 
+              :show-file-list="true">
+              <el-button size="small" icon="el-icon-upload" type="primary">上传模板</el-button>
             </el-upload>
           </div>
       </el-form-item>
@@ -36,7 +30,7 @@
 </template>
 
 <script>
-  import CategoryApi from '@/api/Category.js';
+  import TemplateManagementApi from '@/api/TemplateManagement.js';
   export default {
     data() {
       return {
@@ -61,6 +55,7 @@
           value: '3',
           label: '特殊'
         }],
+        formData:null
       };
     },
     props: {
@@ -71,8 +66,8 @@
       form:{
         type:Object,
         default:{
-          name:'',
-          fileForm:null
+          file_name:'',
+          file:null
         }
       },
       type:{
@@ -96,78 +91,47 @@
           this.$message.error('上传文件大小不能超过 10MB!');
         }
         return isEXCEL && isLt10M;
-      },
 
-      /*上传图片*/
-      UploadImage(param) {
-        let self = this;
-        const loading = this.$loading({
-          lock: true,
-          text: '正在处理,请等待',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
-        const formData = new FormData();
-        formData.append('iFile', param.file);
-        this.form.fileForm = formData;
-        // OrderApi.batchDelivery(formData)
-        //   .then(response => {
-        //     loading.close();
-        //     self.dialogBatchDelivery = false;
-        //     self.$message({
-        //       message: response.msg,
-        //       type: 'warning'
-        //     });
-        //   })
-        //   .catch(response => {
-        //     loading.close();
-        //     self.$message({
-        //       message: '本次处理失败',
-        //       type: 'warning'
-        //     });
-        //     param.onError();
-        //   });
+      },
+      onChange(file){
+      },
+      UploadImage(param){
+        this.form.file = param.file
       },
       /*添加样品*/
       addTag() {
         let self = this;
-        let params = this.form;
+        console.log(self.form,'数据')
         self.$refs.form.validate((valid) => {
           if (valid) {
             self.submit_loading = true;
-            // if(type==0){
-            //   CategoryApi.addCategory(params, true).then(data => {
-            //     self.submit_loading = false;
-            //     self.$message({
-            //       message: data.msg,
-            //       type: 'success'
-            //     });
-            //     self.dialogFormVisible(true);
-            //   })
-            //   .catch(error => {
-            //     self.submit_loading = false;
-            //   });
-            // }else{
-            //   CategoryApi.editCategory(params, true)
-            //   .then(data => {
-            //     self.submit_loading = false;
-            //     self.$message({
-            //       message: '恭喜你，修改成功',
-            //       type: 'success'
-            //     });
-            //     self.dialogFormVisible(true);
-
-            //   })
-            //   .catch(error => {
-            //     self.submit_loading = false;
-            //   });
-            // }
+            const formData = new FormData();
+            formData.append('file', this.form.file);
+            formData.append("file_name", this.form.file_name);
+             TemplateManagementApi.uploadTemplate(formData)
+              .then(response => {
+                self.submit_loading = false;
+                self.$message({
+                  message: response.msg,
+                  type: 'warning'
+                });
+                self.dialogFormVisible(true)
+              })
+              .catch(response => {
+                self.submit_loading = false;
+                self.$message({
+                  message: '本次处理失败',
+                  type: 'warning'
+                });
+              });
+          
             
           }
         });
       },
       /*关闭弹窗*/
       dialogFormVisible(e) {
+        this.$refs['form'].resetFields();
         if (e) {
           this.$emit('closeDialog', {
             type: 'success',

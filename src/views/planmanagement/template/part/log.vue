@@ -12,7 +12,7 @@
     <div class="common-seach-wrap fr">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="模板名称">
-          <el-input v-model="formInline.search" placeholder="请输入模板名称"></el-input>
+          <el-input v-model="formInline.file_name" placeholder="请输入模板名称"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
@@ -23,18 +23,13 @@
     <div class="product-content">
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-          <el-table-column prop="" label="文件名称">
-            <template slot-scope="scope" v-if="scope.row.user">
-              <span>{{scope.row.user.nickName}}</span>
-              <span class="gray9">(用户ID：{{scope.row.user.user_id}})</span>
-            </template>
-          </el-table-column>
-          <!-- <el-table-column prop="remark" label="备注"></el-table-column> -->
+          <el-table-column prop="file_name" label="文件名称"></el-table-column>
           <el-table-column prop="create_time" label="上传时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="90">
             <template slot-scope="scope">
-              <el-button @click="viewClick(scope.row)" type="text" size="small" v-auth="'/user/grade/edit'" >查看</el-button>
-              <el-button @click="downloadClick(scope.row)" type="text" size="small" v-if="scope.row.is_default == 0"  v-auth="'/user/grade/delete'">下载</el-button>
+              <!-- <el-button @click="viewClick(scope.row)" type="text" size="small">查看</el-button> -->
+              <el-button @click="downloadClick(scope.row)" type="text" size="small">下载</el-button>
+              <el-button @click="delClick(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -55,7 +50,7 @@
 
 <script>
   import AddEdit from './AddEait.vue';
-  import UserApi from '@/api/user.js';
+  import TemplateManagementApi from '@/api/TemplateManagement.js';
   export default {
     components: {
       AddEdit
@@ -74,7 +69,7 @@
         curPage: 1,
         /*横向表单数据模型*/
         formInline: {
-          search: ''
+          file_name: ''
         },
         open_add:false,
         open_type:0,
@@ -107,8 +102,7 @@
         self.loading = true;
         let Params = self.formInline;
         Params.page = self.curPage;
-        Params.list_rows = self.pageSize;
-        UserApi.gradelog(Params, true).then(data => {
+        TemplateManagementApi.showTemplate(Params, true).then(data => {
           self.loading = false;
           self.tableData = data.data.list.data;
           self.totalDataNumber = data.data.list.total;
@@ -126,8 +120,48 @@
       viewClick(){
 
       },
-      downloadClick(){
-
+      downloadClick(row){
+        const fileUrl = row.template_url;
+          const link = document.createElement('a');
+          link.href = fileUrl;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+      },
+      delClick(row){
+        let self = this;
+        self
+            .$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            })
+            .then(() => {
+              self.loading = true;
+              TemplateManagementApi.delTemplate({
+                id: row.id
+                  },
+                  true
+                )
+                .then(data => {
+                  self.loading = false;
+                  if (data.code == 1) {
+                    self.$message({
+                      message: '删除成功',
+                      type: 'success'
+                    });
+                    self.getTableList();
+                  } else {
+                    self.loading = false;
+                  }
+                })
+                .catch(error => {
+                  self.loading = false;
+                });
+            })
+            .catch(() => {
+              self.loading = false;
+            });
       },
       addClick(){
         this.open_add = true;

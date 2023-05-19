@@ -33,32 +33,12 @@
     <div class="product-content">
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-          <el-table-column prop="shop_supplier_id" label="商户ID" width="90"></el-table-column>
-          <el-table-column prop="name" label="商户名称"></el-table-column>
-          <el-table-column prop="superUser.user_name" label="登录账号"></el-table-column>
-          <el-table-column label="logo" width="80">
-            <template slot-scope="scope">
-              <el-image v-if="scope.row.logo" :src="scope.row.logo.file_path"
-                width="50" height="50" :preview-src-list="getLogoList(scope.$index)"/>
-            </template>
-          </el-table-column>
-          <el-table-column label="营业执照" width="80">
-            <template slot-scope="scope">
-              <el-image v-if="scope.row.business" :src="scope.row.business.file_path"
-                width="50" height="50" :preview-src-list="getBusinessList(scope.$index)"/>
-            </template>
-          </el-table-column>
-          <el-table-column label="保证金" width="80">
-            <template slot-scope="scope">
-              <span v-if="scope.row.status == 0" class="green">已缴纳</span>
-              <span v-if="scope.row.status == 10">申请退出</span>
-              <span v-if="scope.row.status == 20" class="gray">未缴纳</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="link_name" label="联系人" width="90"></el-table-column>
-          <el-table-column prop="link_phone" label="联系电话" width="120"></el-table-column>
-          <el-table-column prop="address" label="联系地址"></el-table-column>
-          <el-table-column prop="create_time" label="添加时间" width="150"></el-table-column>
+          <el-table-column prop="shop_supplier_id" label="机构编号" width="90"></el-table-column>
+          <el-table-column prop="name" label="机构名称"></el-table-column>
+          <el-table-column prop="superUser.user_name" label="机构电话"></el-table-column>
+          <el-table-column prop="link_name" label="机构负责人" width="90"></el-table-column>
+          <el-table-column prop="create_time" label="会员有效时间" width="150"></el-table-column>
+          <el-table-column prop="create_time" label="创建时间" width="150"></el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template slot-scope="scope">
               <!-- <el-button @click="recycle(scope.row,0)" type="text" size="small" v-if="scope.row.is_recycle==1" style="color:gray;">开启</el-button>

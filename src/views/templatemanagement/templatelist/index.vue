@@ -13,7 +13,7 @@
       <div class="common-seach-wrap fr">
         <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="">
-            <el-input v-model="formInline.search" placeholder="请输入商户名称"></el-input>
+            <el-input v-model="formInline.template_name" placeholder="请输入模板名称"></el-input>
           </el-form-item>
   
           <el-form-item>
@@ -26,17 +26,19 @@
         <div class="table-wrap">
           <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
             <!-- <el-table-column prop="shop_supplier_id" label="商户ID" width="90"></el-table-column> -->
-            <el-table-column prop="name" label="样品名称"></el-table-column>
+            <el-table-column prop="template_name" label="模板名称"></el-table-column>
             <el-table-column label="模板文件">
               <template slot-scope="scope">
-                {{scope.row.superUser.user_name}}
+                <el-link :href="scope.row.template_url" target="_blank">查看链接</el-link>
+                <!-- {{scope.row.template_url}} -->
               </template>
             </el-table-column>
             <el-table-column prop="address" label="模板历史"></el-table-column>
             <el-table-column prop="create_time" label="上传时间"></el-table-column>
             <el-table-column fixed="right" label="操作" width="150">
               <template slot-scope="scope">
-                <el-button @click="editClick(scope.row)" type="text" size="small">编辑</el-button>
+                <!-- <el-button @click="editClick(scope.row)" type="text" size="small">编辑</el-button> -->
+                <el-button @click="downloadClick(scope.row)" type="text" size="small">下载</el-button>
                 <el-button @click="deleteClick(scope.row.shop_supplier_id)" type="text" size="small">删除</el-button>
               </template>
             </el-table-column>
@@ -57,7 +59,7 @@
   </template>
   
   <script>
-    import SupplierApi from '@/api/supplier.js';
+    import TemplateApi from '@/api/Template.js';
     import AddEdit from './component/AddEait.vue';
     import {deepClone} from '@/utils/base.js';
     export default {
@@ -73,15 +75,14 @@
           /*门店列表数据*/
           storeList: [],
           /*一页多少条*/
-          pageSize: 20,
+          pageSize: 10,
           /*一共多少条数据*/
           totalDataNumber: 0,
           /*当前是第几页*/
           curPage: 1,
           /*横向表单数据模型*/
           formInline: {
-            shop_id: '',
-            search: ''
+            template_name: ''
           },
           /*是否打开添加弹窗*/
           open_add: false,
@@ -122,30 +123,15 @@
           let Params = this.formInline;
           Params.page = self.curPage;
           Params.list_rows = self.pageSize;
-          Params.list_rows = self.pageSize;
-          SupplierApi.supplierList(Params, true)
+          TemplateApi.listsTemplate(Params, true)
             .then(res => {
               self.loading = false;
-              self.tableData = res.data.list.data;
-              self.totalDataNumber = res.data.list.total;
-              self.tableData.forEach(function(item) {
-                if(item.business){
-                  self.businessImgs.push(item.business.file_path);
-                }
-                if(item.logo){
-                  self.logoImgs.push(item.logo.file_path);
-                }
-              });
+              self.tableData = res.data.file_list.data;
+              self.totalDataNumber = res.data.file_list.total;
             })
             .catch(error => {
               self.loading = false;
             });
-        },
-        getLogoList(index){
-          return this.logoImgs.slice(index).concat(this.logoImgs.slice(0,index))
-        },
-        getBusinessList(index){
-          return this.businessImgs.slice(index).concat(this.businessImgs.slice(0,index))
         },
         /*搜索查询*/
         onSubmit() {
@@ -165,6 +151,15 @@
           this.open_type = 1;
           this.open_add = true;
         },
+        downloadClick(row){
+          const fileUrl = row.template_url;
+          const link = document.createElement('a');
+          link.href = fileUrl;
+          link.setAttribute('download', row.template_name);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        },
         closeDialogFunc(e,f){
           if (f == 'add') {
             this.open_add = e.openDialog;
@@ -172,48 +167,6 @@
               this.getTableList();
             }
           }
-        },
-        // /*打开添加*/
-        // showBatchDelivery() {
-        //   this.$router.push('/supplier/supplier/add');
-        // },
-  
-        // /*打开编辑*/
-        // editClick(row) {
-        //   let self = this;
-        //   let params = row.shop_supplier_id;
-        //   this.$router.push({
-        //     path: '/supplier/supplier/edit',
-        //     query: {
-        //       shop_supplier_id: params
-        //     }
-        //   })
-        // },
-        /* 强制下架上架*/
-        recycle(row,state){
-          let self = this;
-          let war="";
-          if(state==1){
-            war="禁止"
-          }else if(state==0){
-            war="开启"
-          }
-          self
-            .$confirm("确认要"+war+"吗?", '提示', {
-              type: 'warning'
-            })
-            .then(() => {
-              SupplierApi.supplierRecycle({
-                shop_supplier_id: row.shop_supplier_id,
-                is_recycle:state
-              }).then(data => {
-                self.$message({
-                  message: war+'成功',
-                  type: 'success'
-                });
-                self.getTableList();
-              });
-            });
         },
         /*删除*/
         deleteClick(row) {

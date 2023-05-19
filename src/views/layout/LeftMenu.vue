@@ -13,7 +13,8 @@
         </div>
       </div>
       <div class="d-c-c">
-        <span class="p-10-0 blue fb tc">{{baseInfo.shop_name}}</span>
+        <span class="p-10-0 blue fb tc">实验室</span>
+        <!-- <span class="p-10-0 blue fb tc">{{baseInfo.shop_name}}</span> -->
       </div>
       <div class="nav-wrapper mt10">
         <div class="first-menu-content">
