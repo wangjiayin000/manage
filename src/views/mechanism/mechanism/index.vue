@@ -14,7 +14,7 @@
         <el-form-item label="会员">
           <el-select v-model="formInline.vip_time" placeholder="请选择">
             <el-option label="会员" value="1"></el-option>
-            <el-option label="到期会员" value="0"></el-option>
+            <el-option label="到期会员" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -24,7 +24,6 @@
     </div>
     <div class="mb16">
         <el-button size="small" type="primary" @click="addEditClick" icon="el-icon-plus">添加机构</el-button>
-        <!-- <el-button size="small" type="primary" @click="addPuthClick" icon="el-icon-plus">机构数据</el-button> -->
     </div>
     <!--内容-->
     <div class="product-content">
@@ -42,9 +41,7 @@
           <el-table-column prop="create_time" label="创建时间" width="150"></el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template slot-scope="scope">
-              <!-- <el-button @click="recycle(scope.row,0)" type="text" size="small" v-if="scope.row.is_recycle==1" style="color:gray;">开启</el-button>
-              <el-button @click="recycle(scope.row,1)" type="text" size="small" v-else>禁用</el-button> -->
-              <el-button @click="addPuthClick()" type="text" size="small">机构数据</el-button>
+              <el-button @click="addPuthClick(scope.row)" type="text" size="small">机构数据</el-button>
               <el-button @click="editClick(scope.row)" type="text" size="small">编辑</el-button>
               <el-button @click="deleteClick(scope.row)" type="text" size="small">删除</el-button>
             </template>
@@ -157,8 +154,8 @@
         this.addform = {};
       },
         /**机构数据 */
-        addPuthClick(){
-        this.$router.push('/mechanism/mechanism/organization');
+        addPuthClick(row){
+        this.$router.push('/mechanism/mechanism/organization?id='+row.id);
       },
       /*打开编辑*/
       editClick(row) {

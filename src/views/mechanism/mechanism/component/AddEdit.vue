@@ -26,6 +26,7 @@
             <el-date-picker
                 v-model="form.vip_time"
                 type="date"
+                :picker-options="pickerOptions"
                 placeholder="选择日期">
             </el-date-picker>
 
@@ -65,7 +66,11 @@
             vip_time: '',
             id: ''
           },
-          
+          pickerOptions: {
+            disabledDate: (time) => {
+              return time.getTime() < Date.now()-1 * 24 * 60 * 60 * 1000
+            }
+          },
           rules:{
             org_name:[
               {required: true,message: '请输入机构名称',trigger: 'blur'}

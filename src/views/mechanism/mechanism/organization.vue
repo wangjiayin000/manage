@@ -23,7 +23,10 @@
       <Employee v-if="activeName == 'employee'"></Employee>
       <!--基地-->
       <Base v-if="activeName == 'base'"></Base>
-  
+       <!--提交-->
+       <div class="common-button-wrapper">
+          <el-button size="small" type="info" @click="cancelFunc">{{'返回'}}</el-button>
+        </div>
     </div>
   </template>
   <script>
@@ -45,10 +48,25 @@
         form: {
           status: 0
         },
+        addform:{
+          id:''
+        },
         activeName: 'information'
       };
+    },  
+    mounted(){
+      this.addform.id = this.$route.query.id;
     },
-    methods: {}
+    provide(){
+      return {
+       form :this.addform
+      }
+    },
+    methods: {
+      cancelFunc(){
+        this.$router.back(-1);
+      }
+    }
   };
   </script>
   
