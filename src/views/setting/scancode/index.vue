@@ -1,7 +1,7 @@
 <template>
     <div class="scancode">
         <el-form size="small" ref="form" :model="form" label-width="150px">
-            <div class="common-form">商城设置</div>
+            <div class="common-form">扫码设置</div>
             <el-form-item label="是否开启扫码">
                 <div>
                     <el-radio v-model="form.store_open" label="1">开启</el-radio>

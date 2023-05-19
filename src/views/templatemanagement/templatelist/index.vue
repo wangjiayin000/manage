@@ -39,7 +39,7 @@
               <template slot-scope="scope">
                 <!-- <el-button @click="editClick(scope.row)" type="text" size="small">编辑</el-button> -->
                 <el-button @click="downloadClick(scope.row)" type="text" size="small">下载</el-button>
-                <el-button @click="deleteClick(scope.row.shop_supplier_id)" type="text" size="small">删除</el-button>
+                <el-button @click="deleteClick(scope.row)" type="text" size="small">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -177,14 +177,14 @@
             type: 'warning'
           }).then(() => {
             self.loading = true;
-            SupplierApi.deleteSupplier({
-                shop_supplier_id: row
+            TemplateApi.deleteTemplate({
+                id: row.id
               }, true)
               .then(data => {
                 self.loading = false;
                 if (data.code == 1) {
                   self.$message({
-                    message: '恭喜你，商户删除成功',
+                    message: '删除成功',
                     type: 'success'
                   });
                   self.getTableList();

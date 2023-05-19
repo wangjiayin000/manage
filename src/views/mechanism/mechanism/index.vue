@@ -8,8 +8,8 @@
 
     <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="">
-          <el-input v-model="formInline.search" placeholder="请输入商户名称"></el-input>
+        <el-form-item label="机构名称">
+          <el-input v-model="formInline.search" placeholder="请输入机构名称"></el-input>
         </el-form-item>
         <el-form-item label="会员">
           <el-select v-model="formInline.shop_id" placeholder="请选择">

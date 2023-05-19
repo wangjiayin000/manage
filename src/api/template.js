@@ -12,7 +12,10 @@ let TemplateApi = {
      addTemplate(data, errorback) {
         return request._post('/shop/template.template/add', data, errorback);
     },
-   
+     /*删除模板*/
+     deleteTemplate(data, errorback) {
+        return request._post('/shop/template.template/delete', data, errorback);
+    },
 }
 
 export default TemplateApi;
