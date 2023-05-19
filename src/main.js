@@ -12,6 +12,11 @@ import echarts from 'echarts'
 
 import './permission' // permission control
 
+// 导入moment
+import moment from 'moment'
+
+Vue.prototype.$moment = moment
+
 Vue.prototype.$echarts = echarts
 
 Vue.use(ElementUI)
