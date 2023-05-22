@@ -12,12 +12,10 @@
     <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="机构">
-          <el-select v-model="formInline.grade_id" placeholder="请选择机构">
+          <el-select v-model="formInline.org_id" filterable placeholder="请选择机构">
             <el-option label="全部" value="0"></el-option>
-            <el-option label="机构1" value="1"></el-option>
-            <el-option label="机构2" value="2"></el-option>
-            <!-- <el-option v-for="(item, index) in gradeList" :key="index" :label="item.name" :value="item.grade_id">
-            </el-option> -->
+            <el-option v-for="item in orgList" :key="item.id" :label="item.org_name" :value="item.id">
+            </el-option>
           </el-select>
          </el-form-item>
         <!-- <el-form-item label="机构名称">
@@ -33,17 +31,16 @@
       <div class="table-wrap">
         <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
           <el-table-column prop="" label="文件名称">
-            <template slot-scope="scope" v-if="scope.row.user">
-              <span>{{scope.row.user.nickName}}</span>
-              <span class="gray9">(用户ID：{{scope.row.user.user_id}})</span>
+            <template slot-scope="scope">
+              <span>{{scope.row.org_name}}</span>
             </template>
           </el-table-column>
           <!-- <el-table-column prop="remark" label="备注"></el-table-column> -->
           <el-table-column prop="create_time" label="上传时间"></el-table-column>
           <el-table-column fixed="right" label="操作" width="90">
             <template slot-scope="scope">
-              <el-button @click="viewClick(scope.row)" type="text" size="small" v-auth="'/user/grade/edit'" >查看</el-button>
-              <el-button @click="downloadClick(scope.row)" type="text" size="small" v-if="scope.row.is_default == 0"  v-auth="'/user/grade/delete'">下载</el-button>
+              <!-- <el-button @click="viewClick(scope.row)" type="text" size="small" >查看</el-button> -->
+              <el-button @click="downloadClick(scope.row)" type="text" size="small">下载</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -62,7 +59,8 @@
 </template>
 
 <script>
-  import UserApi from '@/api/user.js';
+  import TemplateManagementApi from '@/api/TemplateManagement.js';
+
   export default {
     components: {},
     data() {
@@ -71,6 +69,8 @@
         loading: true,
         /*列表数据*/
         tableData: [],
+        /**机构数据 */
+        orgList:[],
         /*一页多少条*/
         pageSize: 10,
         /*一共多少条数据*/
@@ -79,7 +79,7 @@
         curPage: 1,
         /*横向表单数据模型*/
         formInline: {
-          grade_id: ''
+          org_id: ''
         },
       };
     },
@@ -109,16 +109,17 @@
         self.loading = true;
         let Params = self.formInline;
         Params.page = self.curPage;
-        Params.list_rows = self.pageSize;
-        UserApi.gradelog(Params, true).then(data => {
+        self.loading = true;
+        TemplateManagementApi.getOrgLists(Params, true).then(res => {
           self.loading = false;
-          self.tableData = data.data.list.data;
-          self.totalDataNumber = data.data.list.total;
+          let {data} = res;
+          self.orgList = data.org;
+          self.tableData = data.list.data;
+          self.totalDataNumber = data.list.total;
         }).catch(error => {
-
+          self.loading = false;
         });
       },
-
       /*搜索查询*/
       onSubmit() {
         let self = this;

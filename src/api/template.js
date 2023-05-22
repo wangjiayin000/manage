@@ -16,6 +16,10 @@ let TemplateApi = {
      deleteTemplate(data, errorback) {
         return request._post('/shop/template.template/delete', data, errorback);
     },
+     /*样品列表*/
+     getSampleListTemplate(data, errorback) {
+        return request._post('/shop/template.template/getSampleList', data, errorback);
+    },
 }
 
 export default TemplateApi;

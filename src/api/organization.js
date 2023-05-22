@@ -18,8 +18,16 @@ let OrganizationApi = {
     },  
      /*机构对应的实验*/
      OrgExperimentLists(data, errorback) {
-    return request._post('/shop/organization.Organization/OrgExperimentLists', data, errorback);
+      return request._post('/shop/organization.Organization/OrgExperimentLists', data, errorback);
     },  
+     /*机构对应的员工*/
+     OrgStaffLists(data, errorback) {
+      return request._post('/shop/organization.Organization/OrgStaffLists', data, errorback);
+    }, 
+     /*机构对应的基地*/
+     OrgBaseLists(data, errorback) {
+      return request._post('/shop/organization.Organization/OrgBaseLists', data, errorback);
+    }, 
 }
 
 export default OrganizationApi;

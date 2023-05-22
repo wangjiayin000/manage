@@ -9,7 +9,7 @@
         <div class="common-seach-wrap">
             <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
                 <el-form-item label="基地名称">
-                    <el-input v-model="searchForm.product_name" placeholder="请输入基地名称"></el-input>
+                    <el-input v-model="searchForm.base_name" placeholder="请输入基地名称"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button size="small" type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
@@ -23,19 +23,19 @@
        <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                <el-table-column prop="category.name" label="基地名称"></el-table-column>
-                <el-table-column prop="category.name" label="基地地址"></el-table-column>
-                <el-table-column prop="category.name" label="基地负责人"></el-table-column>
-                <el-table-column prop="category.name" label="电话"></el-table-column>
-                <el-table-column prop="category.name" label="基地编号"></el-table-column>
-                <el-table-column fixed="right" label="操作" width="80">
+                <el-table-column prop="base_name" label="基地名称"></el-table-column>
+                <el-table-column prop="base_address" label="基地地址"></el-table-column>
+                <el-table-column prop="base_principal" label="基地负责人"></el-table-column>
+                <el-table-column prop="base_tel" label="电话"></el-table-column>
+                <el-table-column prop="base_num" label="基地编号"></el-table-column>
+                <!-- <el-table-column fixed="right" label="操作" width="80">
                     <template slot-scope="scope">
                     <div class="table-btn-column">
                         <el-button @click="editClick(scope.row)" type="text" size="small">编辑</el-button>
                         <el-button @click="delClick(scope.row)" type="text" size="small">删除</el-button>
                     </div>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
                 </el-table>
             </div>
         </div>
@@ -54,6 +54,7 @@
     </div>
 </template>
 <script>
+  import OrganizationApi from '@/api/Organization.js';
     export default{
         components:{},
         data(){
@@ -68,7 +69,8 @@
                 curPage: 1,
                 /*搜索参数*/
                 searchForm:{
-                    product_name:''
+                    base_name:'',
+                    org_id:''
                 },
                  /*列表数据*/
                 tableData: [],
@@ -76,7 +78,9 @@
                 categoryList: [],
             }
         },
+        inject:['form'],
         created() {
+            this.searchForm.org_id = this.form.id;
             /*获取列表*/
             this.getData();
         },
@@ -86,22 +90,17 @@
                 let self = this;
                 let Params = self.searchForm;
                 Params.page = self.curPage;
-                Params.list_rows = self.pageSize;
-                Params.type = self.activeName;
                 self.loading = false;
-                // self.loading = true;
-                // PorductApi.productList(Params, true)
-                //     .then(data => {
-                //     self.loading = false;
-                //     self.tableData = data.data.list.data;
-                //     self.categoryList = data.data.category;
-                //     self.totalDataNumber = data.data.list.total;
-                //     self.supplier = data.data.supplier;
-                //     self.product_count = data.data.product_count;
-                //     })
-                //     .catch(error => {
-                //     self.loading = false;
-                //     });
+                self.loading = true;
+                OrganizationApi.OrgBaseLists(Params, true)
+                    .then(data => {
+                    self.loading = false;
+                    self.tableData = data.data.list.data;
+                    self.totalDataNumber = data.data.list.total;
+                    })
+                    .catch(error => {
+                    self.loading = false;
+                    });
             },
              /*搜索查询*/
             onSubmit() {

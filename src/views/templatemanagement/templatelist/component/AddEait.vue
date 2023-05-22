@@ -9,12 +9,12 @@
     <el-form size="small" :model="form" ref="form">
       <el-form-item label="样品名称" :label-width="formLabelWidth" prop="template_name" :rules="[{required: true,message: '请选择样品名称',trigger: ['blur', 'change']}]">
         <!-- <el-input v-model="form.template_name" style="width:50%" placeholder="请输入模板名称"></el-input> -->
-        <el-select v-model="form.template_name" placeholder="请选择样品">
+        <el-select v-model="form.template_name" filterable placeholder="请选择样品">
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.label">
+            v-for="item in sampleList"
+            :key="item.id"
+            :label="item.sample_name"
+            :value="item.sample_name">
           </el-option>
         </el-select>
       </el-form-item>
@@ -41,10 +41,8 @@
   export default {
     data() {
       return {
-        // form: {
-        //   /*昵称*/
-        //   tag_name: ''
-        // },
+         /*是否正在加载*/
+         loading: true,
         /*左边长度*/
         formLabelWidth: '120px',
         showvisble:false,
@@ -63,7 +61,8 @@
           value: '3',
           label: '特殊'
         }],
-        template_url:''
+        template_url:'',
+        sampleList:[]
       };
     },
     props: {
@@ -85,8 +84,30 @@
     },
     created() {
       this.dialogVisible = this.open_add;
+      this.init();
     },
+   computed:{
+      // formData(){
+      //   let data = this.form;
+      //   console.log(this.form,'数据')
+      //   return data
+      // }
+   },
+   mounted(){
+   },
     methods: {
+      init(){
+        let self = this;
+        self.loading = true;
+        TemplateApi.getSampleListTemplate({}, true)
+        .then(data => {
+          self.loading = false;
+          self.sampleList = data.data.list;
+        })
+        .catch(error => {
+          self.loading = false;
+        });
+      },
       /*选择图片之前*/
       onBeforeUploadImage(file) {
         var fileType = file.name.substring(file.name.lastIndexOf('.') + 1)
