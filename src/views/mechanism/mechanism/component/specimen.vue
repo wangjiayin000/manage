@@ -8,9 +8,18 @@
          <!--搜索表单-->
         <div class="common-seach-wrap">
         <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
-            <el-form-item label="关键词">
-                <el-input v-model="searchForm.product_name" placeholder="请输入样品编号|样品类型|样品名称|样品型号"></el-input>
+            <el-form-item label="样品编号">
+                <el-input v-model="searchForm.sample_id" placeholder="请输入样品编号"></el-input>
             </el-form-item>
+            <el-form-item label="样品类型">
+                <el-input v-model="searchForm.sample_name" placeholder="请输入样品类型"></el-input>
+            </el-form-item>
+            <el-form-item label="样品名称">
+                <el-input v-model="searchForm.list_name" placeholder="请输入样品名称"></el-input>
+            </el-form-item>          
+            <el-form-item label="样品型号">
+                <el-input v-model="searchForm.model_name" placeholder="请输入样品型号"></el-input>
+            </el-form-item>   
             <el-form-item>
                 <el-button size="small" type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
             </el-form-item>
@@ -20,10 +29,12 @@
        <div class="product-content">
             <div class="table-wrap">
                 <el-table size="small" :data="tableData" border style="width: 100%" v-loading="loading">
-                <el-table-column prop="category.name" label="样品编号"></el-table-column>
-                <el-table-column prop="category.name" label="样品类型"></el-table-column>
-                <el-table-column prop="category.name" label="样品名称"></el-table-column>
-                <el-table-column prop="category.name" label="样品型号"></el-table-column>
+                <el-table-column prop="sample_id" label="样品编号"></el-table-column>
+                <el-table-column prop="sample_name" label="样品类型"></el-table-column>
+                <el-table-column prop="list_name" label="样品名称"></el-table-column>
+                <el-table-column prop="model_name" label="样品型号"></el-table-column>
+                <el-table-column prop="" label="样品进度"></el-table-column>
+                <el-table-column prop="" label="样品报告"></el-table-column>
                 </el-table>
             </div>
         </div>
@@ -42,6 +53,7 @@
     </div>
 </template>
 <script>
+  import OrganizationApi from '@/api/Organization.js';
     export default{
         components:{},
         data(){
@@ -56,7 +68,11 @@
                 curPage: 1,
                 /*搜索参数*/
                 searchForm:{
-                    product_name:''
+                    sample_id:'',
+                    sample_name:'',
+                    list_name:'',
+                    model_name:'',
+                    org_id:''
                 },
                  /*列表数据*/
                 tableData: [],
@@ -64,7 +80,9 @@
                 categoryList: [],
             }
         },
+        inject:['form'],
         created() {
+            this.searchForm.org_id = this.form.id;
             /*获取列表*/
             this.getData();
         },
@@ -74,22 +92,17 @@
                 let self = this;
                 let Params = self.searchForm;
                 Params.page = self.curPage;
-                Params.list_rows = self.pageSize;
-                Params.type = self.activeName;
                 self.loading = false;
-                // self.loading = true;
-                // PorductApi.productList(Params, true)
-                //     .then(data => {
-                //     self.loading = false;
-                //     self.tableData = data.data.list.data;
-                //     self.categoryList = data.data.category;
-                //     self.totalDataNumber = data.data.list.total;
-                //     self.supplier = data.data.supplier;
-                //     self.product_count = data.data.product_count;
-                //     })
-                //     .catch(error => {
-                //     self.loading = false;
-                //     });
+                self.loading = true;
+                OrganizationApi.OrgSampleRelLists(Params, true)
+                    .then(data => {
+                    self.loading = false;
+                    self.tableData = data.data.list.data;
+                    self.totalDataNumber = data.data.list.total;
+                    })
+                    .catch(error => {
+                    self.loading = false;
+                    });
             },
              /*搜索查询*/
             onSubmit() {

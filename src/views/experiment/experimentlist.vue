@@ -12,7 +12,7 @@
         </el-form>
         </div>
         <div class="common-level-rail">
-            <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick">添加试验</el-button>
+            <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick"  v-auth="'/experiment/add'">添加试验</el-button>
         </div>
             <!--内容-->
        <div class="product-content">
@@ -24,8 +24,8 @@
                 <el-table-column fixed="right" label="操作" width="90">
                     <template slot-scope="scope">
                     <!-- <div class="table-btn-column"> -->
-                        <el-button @click="editClick(scope.row)" type="text" size="small">编辑</el-button>
-                        <el-button @click="delClick(scope.row)" type="text" size="small">删除</el-button>
+                        <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/experiment/edit'">查看</el-button>
+                        <el-button @click="delClick(scope.row)" type="text" size="small" v-auth="'/experiment/del'">删除</el-button>
                     <!-- </div> -->
                     </template>
                 </el-table-column>

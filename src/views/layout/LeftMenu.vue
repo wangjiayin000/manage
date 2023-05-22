@@ -9,7 +9,7 @@
     <div class="menu-wrapper">
       <div class="home-login">
         <div :class="active_menu != null ? 'home-icon' : 'home-icon router-link-active'" @click="choseMenu(null)">
-          <span class="icon iconfont icon-tubiaozhizuomoban-"></span>
+          <span class="icon iconfont icon-shiyanshi"></span>
         </div>
       </div>
       <div class="d-c-c">
@@ -183,9 +183,9 @@ export default {
 };
 </script>
 <style>
-  .home-login .icon-tubiaozhizuomoban-{
+  .home-login .icon-shiyanshi{
     color: #3a8ee6;
-    font-size: 28px;
+    font-size: 24px;
   }
   .menu-item-icon.icon.iconfont{
     font-size: 20px;

@@ -8,7 +8,7 @@
          <!--搜索表单-->
         <div class="common-seach-wrap">
         <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
-            <el-form-item label="关键词">
+            <el-form-item label="员工编号">
                 <el-input v-model="searchForm.product_name" placeholder="请输入员工编号"></el-input>
             </el-form-item>
             <el-form-item>
@@ -16,9 +16,9 @@
             </el-form-item>
         </el-form>
         </div>
-        <div class="common-level-rail">
+        <!-- <div class="common-level-rail">
             <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick">添加员工</el-button>
-        </div>
+        </div> -->
             <!--内容-->
        <div class="product-content">
             <div class="table-wrap">
@@ -27,7 +27,7 @@
                 <el-table-column prop="category.name" label="员工编号"></el-table-column>
                 <el-table-column prop="category.name" label="手机号"></el-table-column>
                 <el-table-column prop="category.name" label="出生年月日"></el-table-column>
-                <el-table-column prop="category.name" label="角色权限"></el-table-column>
+                <!-- <el-table-column prop="category.name" label="角色权限"></el-table-column> -->
                 <el-table-column prop="category.name" label="职务"></el-table-column>
                 <el-table-column prop="category.name" label="基地"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="80">

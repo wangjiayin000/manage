@@ -6,19 +6,19 @@
     -->
     <div class="base">
          <!--搜索表单-->
-        <!-- <div class="common-seach-wrap">
-        <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
-            <el-form-item label="关键词">
-                <el-input v-model="searchForm.product_name" placeholder="请输入样品编号|样品类型|样品名称|样品型号"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button size="small" type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
-            </el-form-item>
-        </el-form>
-        </div> -->
-        <div class="common-level-rail">
-            <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick">添加基地</el-button>
+        <div class="common-seach-wrap">
+            <el-form size="small" :inline="true" :model="searchForm" class="demo-form-inline">
+                <el-form-item label="基地名称">
+                    <el-input v-model="searchForm.product_name" placeholder="请输入基地名称"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button size="small" type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
+                </el-form-item>
+            </el-form>
         </div>
+        <!-- <div class="common-level-rail">
+            <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick">添加基地</el-button>
+        </div> -->
             <!--内容-->
        <div class="product-content">
             <div class="table-wrap">

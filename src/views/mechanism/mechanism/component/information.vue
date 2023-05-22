@@ -46,7 +46,7 @@
       },
       inject:['form'],
       created() {
-        console.log(this.form,'foem')
+
         /*获取数据*/
         this.getData();
       },
@@ -60,7 +60,6 @@
           .then(res => {
             self.loading = false;
             self.information = res.data.list;
-            console.log(res,self.information,'返回数据')           
           })
           .catch(error => {
             self.loading = false;

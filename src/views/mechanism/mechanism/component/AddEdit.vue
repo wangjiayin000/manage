@@ -121,12 +121,11 @@
         addGrade() {
           let self = this;        
           let params = this.form;
-          console.log(params,'params')
+          let time = 24*60*60*1000-1;
           self.$refs.form.validate((valid) => {
             if (valid) {
-              self.submit_loading = true;
-              params.vip_time = params.vip_time*1;
-              
+              self.submit_loading = true;         
+              params.vip_time = params.vip_time*1+time;           
               OrganizationApi.addOrganiztionVip(params, true).then(data => {
                   self.submit_loading = false;
                   self.$message({

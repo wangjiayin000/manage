@@ -66,9 +66,9 @@
             <el-table-column prop="create_time" label="创建时间" width="140"></el-table-column>
             <el-table-column fixed="right" label="操作" width="170">
               <template slot-scope="scope">
-                <el-button @click="editClick(scope.row)" type="text" size="small" v-auth="'/user/user/edit'">编辑
+                <el-button @click="editClick(scope.row)" type="text" size="small">编辑
                 </el-button>
-                <el-button @click="deleteClick(scope.row)" type="text" size="small" v-auth="'/user/user/delete'">删除
+                <el-button @click="deleteClick(scope.row)" type="text" size="small">删除
                 </el-button>
               </template>
             </el-table-column>
@@ -83,29 +83,13 @@
         </div>
       </div>
   
-      <!--会员充值-->
-      <Recharge v-if="open_add" :open_add="open_add" :form="userModel" :gradeList="gradeList"
-        @closeDialog="closeDialogFunc($event, 'add')"></Recharge>
-      <!--会员等级-->
-      <Grade v-if="open_edit" :open_edit="open_edit" :form="userModel" :gradeList="gradeList"
-        @closeDialog="closeDialogFunc($event, 'edit')"></Grade>
-      <!--会员标签-->
-      <Tag v-if="open_tag" :open_tag="open_tag" :form="userModel" @closeDialog="closeDialogFunc($event, 'tag')"></Tag>
     </div>
   </template>
   
   <script>
     import UserApi from '@/api/user.js';
-    import Grade from './dialog/Grade.vue';
-    import Recharge from './dialog/Recharge.vue';
-    import Tag from './dialog/Tag.vue';
     export default {
-      components: {
-        /*编辑组件*/
-        Grade,
-        Recharge,
-        Tag
-      },
+      components: {},
       data() {
         return {
           /*是否加载完成*/
@@ -135,8 +119,6 @@
           /*等级*/
           gradeList: [],
           open_tag: false,
-          /*所有标签*/
-          allTag: []
         };
       },
       created() {
@@ -234,30 +216,7 @@
             }
           }
         },
-         /*修改状态*/
-        changeStatus(item){
-        let self = this;
-        const loading = self.$loading({
-            lock: true,
-            text: '正在处理',
-            spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0.7)'
-        });
-        PageApi.editMenu({
-            menu_id: item.menu_id,
-            status: item.status
-        })
-            .then(data => {
-            loading.close();
-            })
-            .catch(data => {
-            loading.close();
-            self.$message({
-                message: '处理失败，请重试',
-                type: 'warning'
-            });
-            });
-        },
+       
         /*删除用户*/
         deleteClick(row) {
           let self = this;

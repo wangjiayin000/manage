@@ -5,15 +5,24 @@
           描述：计划管理-上传记录
       -->
   <div class="user">
-    <div class="common-level-rail fl">
+    <!-- <div class="common-level-rail fl">
       <el-button size="small" type="primary" icon="el-icon-plus" @click="addClick">选择机构</el-button>
-    </div>
+    </div> -->
     <!--搜索表单-->
-    <div class="common-seach-wrap fr">
+    <div class="common-seach-wrap">
       <el-form size="small" :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="机构名称">
+        <el-form-item label="机构">
+          <el-select v-model="formInline.grade_id" placeholder="请选择机构">
+            <el-option label="全部" value="0"></el-option>
+            <el-option label="机构1" value="1"></el-option>
+            <el-option label="机构2" value="2"></el-option>
+            <!-- <el-option v-for="(item, index) in gradeList" :key="index" :label="item.name" :value="item.grade_id">
+            </el-option> -->
+          </el-select>
+         </el-form-item>
+        <!-- <el-form-item label="机构名称">
           <el-input v-model="formInline.search" placeholder="请输入机构名称"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
         </el-form-item>
@@ -70,7 +79,7 @@
         curPage: 1,
         /*横向表单数据模型*/
         formInline: {
-          search: ''
+          grade_id: ''
         },
       };
     },

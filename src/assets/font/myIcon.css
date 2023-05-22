@@ -1,2 +1,70 @@
 /*自定义iconfont文件，请将你的iconfont.css内容复制拷贝到这里就可以直接在项目里直接引用*/
 /*参考上面的iconfont.css内容和使用方法*/
+/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+@font-face {
+    font-family: 'iconfont';  /* Project id 4064283 */
+    src: url('//at.alicdn.com/t/c/font_4064283_0lk8oaknnlwm.woff2?t=1684726646906') format('woff2'),
+         url('//at.alicdn.com/t/c/font_4064283_0lk8oaknnlwm.woff?t=1684726646906') format('woff'),
+         url('//at.alicdn.com/t/c/font_4064283_0lk8oaknnlwm.ttf?t=1684726646906') format('truetype');
+  }
+  .iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .icon-shiyanshi:before {
+    content: "\e623";
+  }
+  
+  .icon-jigouguanli:before {
+    content: "\e60e";
+  }
+  
+  .icon-moban:before {
+    content: "\e663";
+  }
+  
+  .icon-jihua:before {
+    content: "\e643";
+  }
+  
+  .icon-mobanguanli:before {
+    content: "\e609";
+  }
+  
+  .icon-jigou:before {
+    content: "\e7ca";
+  }
+  
+  .icon-shenhe:before {
+    content: "\e69a";
+  }
+  
+  .icon-jihua1:before {
+    content: "\e635";
+  }
+  
+  .icon-shiyan:before {
+    content: "\e8a0";
+  }
+  
+  .icon-shiyan1:before {
+    content: "\e8a1";
+  }
+  
+  .icon-shenhe1:before {
+    content: "\e616";
+  }
+  
+  .icon-yangpinguanli:before {
+    content: "\e67d";
+  }
+  
+  .icon-yangpinguanli1:before {
+    content: "\e694";
+  }
+  

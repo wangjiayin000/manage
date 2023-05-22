@@ -13,6 +13,7 @@
         </el-form-item>
         <el-form-item label="会员">
           <el-select v-model="formInline.vip_time" placeholder="请选择">
+            <el-option label="全部" value="0"></el-option>
             <el-option label="会员" value="1"></el-option>
             <el-option label="到期会员" value="2"></el-option>
           </el-select>

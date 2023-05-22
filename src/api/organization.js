@@ -12,6 +12,14 @@ let OrganizationApi = {
       delOrganiztionVip(data, errorback) {
         return request._post('/shop/organization.Organization/delOrganiztionVip', data, errorback);
     },  
+      /*机构对应的样品*/
+    OrgSampleRelLists(data, errorback) {
+        return request._post('/shop/organization.Organization/OrgSampleRelLists', data, errorback);
+    },  
+     /*机构对应的实验*/
+     OrgExperimentLists(data, errorback) {
+    return request._post('/shop/organization.Organization/OrgExperimentLists', data, errorback);
+    },  
 }
 
 export default OrganizationApi;
