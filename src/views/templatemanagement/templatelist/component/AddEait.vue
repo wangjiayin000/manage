@@ -6,8 +6,8 @@
   -->
   <el-dialog title="添加模板" :visible.sync="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false" width="600px">
-    <el-form size="small" :model="form" ref="form">
-      <el-form-item label="样品名称" :label-width="formLabelWidth" prop="template_name" :rules="[{required: true,message: '请选择样品名称',trigger: ['blur', 'change']}]">
+    <el-form size="small" :model="form" :rules="rules" ref="form">
+      <el-form-item label="样品名称" :label-width="formLabelWidth" prop="template_name">
         <!-- <el-input v-model="form.template_name" style="width:50%" placeholder="请输入模板名称"></el-input> -->
         <el-select v-model="form.template_name" filterable placeholder="请选择样品">
           <el-option
@@ -18,7 +18,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="模板文件" :label-width="formLabelWidth" prop="template_url" :rules="[{required: true,message: '请上传文件',trigger: ['blur', 'change']}]">
+      <el-form-item label="模板文件" :label-width="formLabelWidth" prop="template_url" ref="headimgUpload">
         <div>
             <el-upload class="avatar-uploader" ref="upload" action="string"
               accept=".pdf" :before-upload="onBeforeUploadImage" :http-request="UploadImage"
@@ -40,6 +40,13 @@
   import TemplateApi from '@/api/Template.js';
   export default {
     data() {
+      let validateImage = (rule, value, callback) => { //验证器
+          if (!this.checkImgSuccess) {     //为true代表图片在  false报错
+              callback(new Error('请上传文件'));
+          } else {
+              callback();
+          }
+      }
       return {
          /*是否正在加载*/
          loading: true,
@@ -62,7 +69,16 @@
           label: '特殊'
         }],
         template_url:'',
-        sampleList:[]
+        sampleList:[],
+        checkImgSuccess:false,
+        rules:{
+          template_name:[
+            {required: true,message: '请选择样品名称',trigger: ['blur', 'change']}
+          ],
+          template_url:[
+            {required: true, validator: validateImage, trigger: 'change'}
+          ]
+        }
       };
     },
     props: {
@@ -140,6 +156,9 @@
             if(response.code==1){
               this.template_url = response.file_path;
               this.showvisble = true;
+              this.$forceUpdate();
+              this.$refs['headimgUpload'].clearValidate();
+              this.checkImgSuccess = true;
             }else{
               this.template_url = null;
               this.showvisble = false;
@@ -163,6 +182,7 @@
       handleRemove(file, fileList) {
         this.template_url = '';
         this.showvisble = false;
+        this.checkImgSuccess = false;
         // console.log(file, fileList);
       },
       /*添加样品*/

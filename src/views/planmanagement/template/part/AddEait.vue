@@ -6,15 +6,15 @@
   -->
   <el-dialog title="添加模板" :visible.sync="dialogVisible" @close='dialogFormVisible' :close-on-click-modal="false"
     :close-on-press-escape="false" width="600px">
-    <el-form size="small" :model="form" ref="form">
-      <el-form-item label="模板名称" :label-width="formLabelWidth" prop="file_name" :rules="[{required: true,message: '请输入模板名称',trigger: ['blur']}]">
+    <el-form size="small" :model="form" :rules="rules" ref="form">
+      <el-form-item label="模板名称" :label-width="formLabelWidth" prop="file_name">
         <el-input v-model="form.file_name" style="width:50%" placeholder="请输入模板名称"></el-input>
       </el-form-item>
-      <el-form-item label="模板文件" :label-width="formLabelWidth" prop="file" :rules="[{required: true,message: '请上传文件',trigger: ['blur', 'change']}]">
+      <el-form-item label="模板文件" :label-width="formLabelWidth" prop="file" ref="headimgUpload">
         <div>
             <el-upload class="avatar-uploader" ref="upload" action="string"
               accept=".xlsx,.xlsm,.xls" :limit="1" :before-upload="onBeforeUploadImage" 
-              :http-request="UploadImage" :on-change="onChange" 
+              :http-request="UploadImage" :on-change="onChange" :on-remove="handleRemove" 
               :show-file-list="true">
               <el-button size="small" icon="el-icon-upload" type="primary">上传模板</el-button>
             </el-upload>
@@ -33,6 +33,13 @@
   import TemplateManagementApi from '@/api/TemplateManagement.js';
   export default {
     data() {
+      let validateImage = (rule, value, callback) => { //验证器
+          if (!this.checkImgSuccess) {     //为true代表图片在  false报错
+              callback(new Error('请上传文件'));
+          } else {
+              callback();
+          }
+      }
       return {
         // form: {
         //   /*昵称*/
@@ -55,7 +62,17 @@
           value: '3',
           label: '特殊'
         }],
-        formData:null
+        formData:null,
+        checkImgSuccess:false,
+        template_url:'',
+        rules:{
+          file_name:[
+            {required: true,message: '请输入模板名称',trigger: ['blur', 'change']}
+          ],
+          file:[
+            {required: true, validator: validateImage, trigger: 'change'}
+          ]
+        }
       };
     },
     props: {
@@ -96,11 +113,20 @@
       onChange(file){
       },
       UploadImage(param){
-        this.form.file = param.file
+        this.template_url = param.file;
+        this.$forceUpdate();
+        this.$refs['headimgUpload'].clearValidate();
+        this.checkImgSuccess = true;
+      },
+       /**移除文件 */
+       handleRemove(file, fileList) {
+        this.template_url = '';
+        this.checkImgSuccess = false;
       },
       /*添加样品*/
       addTag() {
         let self = this;
+        self.form.file = self.template_url
         console.log(self.form,'数据')
         self.$refs.form.validate((valid) => {
           if (valid) {
